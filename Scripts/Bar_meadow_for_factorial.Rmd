@@ -1,0 +1,163 @@
+---
+title: "BarMeadow"
+author: "Chenxin Li"
+date: '2022-05-24'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an Rmarkdown document.If you don't have the rmarkdown package, you will have to install it to run this. 
+The grey areas are code chunks. To run a code chunk click the green triangle at the upper right of each chunk. 
+
+# Packages 
+```{r}
+library(tidyverse) 
+library(readxl) # to load excel files 
+
+library(viridis) # for the colors 
+library(patchwork)
+
+library(emmeans) # for estimated marginal means and statistics 
+```
+
+You will also need `multcomp` and `multcompView` packages for compact letter display (CLD). 
+Install them if you don't have them. 
+
+# Data 
+
+Data from:  
+    Matand, K., Shoemake, M. and Li, C., 2020. 
+    High frequency in vitro regeneration of adventitious shoots in daylilies (Hemerocallis sp) stem tissue using thidiazuron. 
+    BMC Plant Biology, 20(1), pp.1-10.
+  
+For simiplicity, we will be only three of the 19 cultivars: Alias, Bright, and Rococo
+
+```{r}
+stem_data <- read_excel("../Data/Matand_2020_Stem_Data.xlsx") 
+
+stem_data2 <- stem_data %>% 
+  mutate(Treatment = factor(Treatment, levels = c("T1", "T5", "T10"))) %>% 
+  filter(str_detect(Variety, "Alias|Bright|Rococo"))
+
+head(stem_data)
+```
+
+
+# Stat
+```{r}
+model_stem <- lm(Primordia ~ Explant * Treatment * Variety, data = stem_data2)
+anova(model_stem)
+```
+Run a quick ANOVA to check which factors/interactions account for the most variances. 
+
+# Bad example
+## CLD  
+For the classic bar plot meadow, let's generate all pairwise comparisons.
+This is indicated by the ~ Variety:Explant:Treatment syntax. 
+
+```{r}
+est_all <- emmeans(model_stem, pairwise ~ Variety:Explant:Treatment)    
+results_all <- multcomp::cld(est_all$emmeans, Letters = "abcdefghijklmnopqrst") %>% 
+  as.data.frame() %>% 
+  mutate(grouping = str_remove_all(.group, " "))
+
+head(results_all)
+```
+
+
+## Plot 
+The classic bar plot meadow ususally only plots mean and se. 
+We will generate that first. 
+
+```{r}
+barplotMeadow <- stem_data2 %>% 
+  group_by(Variety, Treatment, Explant) %>% 
+  summarise(
+    mean = mean(Primordia),
+    sd = sd(Primordia),
+    NN = n()
+  ) %>% 
+  ungroup() %>% 
+  mutate(se = sd/sqrt(NN)) %>% 
+  ggplot(aes(x = interaction(Variety, Treatment, Explant), y = mean)) +
+  geom_bar(stat = "identity", position = position_dodge2(), alpha = 0.8, width = 0.7) +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2) +
+  geom_text(data = results_all, aes(label = grouping, y = upper.CL), vjust = -0.2) +
+  labs(x = NULL,
+       y = "Mean",
+       caption = "This is horrendous.\nWhat am I looking at?") +
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.caption = element_text(hjust = 0, size = 12)
+  ) +
+  ggtitle("Classic bar plot meadow\ny ~ Variety:Treatment:Explant")
+
+barplotMeadow
+```
+
+# Good example 
+## CLD
+
+In this example, we will focus on comparing the effect of explant and treatment combination at the level of each cultivar. 
+This is indicated by the ~ Explant:Treatment | Variety syntax. 
+
+You can also compare the effect of treatment and cultivar at the level of each explant, if that's what you are interested in. 
+In that case, you will need ~ Treatment:Variety | Explant. 
+
+```{r}
+est_by_factor <- emmeans(model_stem, pairwise ~ Explant:Treatment | Variety)
+results_by_factor <- multcomp::cld(est_by_factor$emmeans, Letters = "abcdefghijklmnopqrst") %>% 
+  as.data.frame() %>% 
+  mutate(grouping = str_remove_all(.group, " "))
+
+head(results_by_factor)
+```
+
+ 
+## plot
+```{r}
+DotPlot_by_factor <- stem_data2 %>% 
+  ggplot(aes(x = Treatment, y = Primordia)) +
+  facet_wrap( ~ Variety + Explant, scales = "free_x", strip.position = "bottom") +
+  ggbeeswarm::geom_quasirandom(aes(fill = Treatment), 
+                               shape = 21, color = "white", size = 2.5, alpha = 0.8) +
+  geom_text(data = results_by_factor, 
+            aes(label = grouping, y = upper.CL + 35), size = 5) +
+  scale_fill_manual(values = viridis(10)[c(1, 5, 8)]) +
+  labs(y = "Response",
+       x = NULL,
+       caption = "That's better.\nReader's attention is more focused.") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    strip.background = element_blank(),
+    panel.spacing.y = unit(1.2, "lines"),
+    strip.text = element_text(size = 10),
+    strip.placement = "outside",
+    plot.caption = element_text(hjust = 0, size = 12)
+  ) +
+  ggtitle("Better designed for multifactorial experiments\ny ~ Treatment:Explant | Variety")
+
+DotPlot_by_factor
+```
+This has variety as rows and explant as columns, which allows us to compare across the same variety. 
+Again, this is indicated by ~ Explant:Treatment | Variety syntax. 
+
+
+# Put together
+```{r}
+wrap_plots(barplotMeadow, DotPlot_by_factor, nrow = 1)
+
+ggsave("../Results/AvoidBarPlotMeadow.svg", height = 7, width = 10, bg = "white")
+ggsave("../Results/AvoidBarPlotMeadow.png", height = 7, width = 10, bg = "white")
+```
+
+
+
+
+
+

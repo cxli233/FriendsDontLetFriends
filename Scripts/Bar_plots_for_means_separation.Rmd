@@ -1,0 +1,180 @@
+---
+title: "Bar_charts"
+author: "Chenxin Li"
+date: "4/5/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an Rmarkdown document.If you don't have the rmarkdown package, you will have to install it to run this. 
+The grey areas are code chunks. To run a code chunk click the green triangle at the upper right of each chunk.  
+
+# Package
+```{r}
+library(tidyverse)
+library(RColorBrewer) # for the colors 
+library(patchwork) # for putting ggplot objects into one graph 
+```
+
+# Data
+
+Group is sampled from a normal distribution with mean = 1 and sd = 1. 
+Group is sampled from a lognormal distribution with mean = 1 and sd = 1. 
+
+```{r}
+set.seed(666)
+group1 <- rnorm(n = 100, mean = 1, sd = 1)
+group2 <- rlnorm(n = 100, 
+                 meanlog = log(1^2/sqrt(1^2 + 1^2)), 
+                 sdlog = sqrt(log(1+(1^2/1^2))))
+
+sd(group1)
+sd(group2)
+
+mean(group1)
+mean(group2)
+
+median(group1)
+median(group2)
+
+IQR(group1)
+IQR(group2)
+```
+
+```{r}
+groups_long <- cbind(
+  group1,
+  group2
+) %>% 
+  as.data.frame() %>% 
+  gather("group", "response", 1:2)
+
+head(groups_long)
+```
+
+# Tests
+```{r}
+t.test(group1, group2)
+
+wilcox.test(group1, group2)
+
+ks.test(group1, group2)
+```
+
+You will notice different tests give different results. 
+Might seem odd at first, but these tests are not testing for the same thing, so it is not odd after all.
+
+# Plot
+## bar
+```{r}
+bar <- groups_long %>% 
+  ggplot(aes(x = group, y = response)) +
+  geom_bar(stat = "summary", fun = mean, 
+           width = 0.7, alpha = 0.8,
+           aes(fill = group)) + 
+  stat_summary(geom = "errorbar", fun.data = "mean_se",
+               width = 0.1, size = 1) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")[1:2]) +
+  labs(x = "Group",
+       y = "Response",
+       caption = paste0("They are the same!\nP = ", 
+                        signif(t.test(group1, group2)$p.value, 2),
+                        " (t test)")) +
+  theme_classic() +
+  theme(
+    text = element_text(size = 12, face = "bold", color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "none",
+    plot.title = element_text(size = 10),
+    plot.caption = element_text(hjust = 0)
+  ) +
+  ggtitle(
+    paste0(
+      "group1: mean = ", signif(mean(group1), 2), 
+      "; sd = ", signif(sd(group1), 2), "\n",
+      "group2: mean = ", signif(mean(group2), 2), 
+      "; sd = ", signif(sd(group2), 2)
+    )) 
+  
+  
+
+bar
+```
+## Boxplot
+```{r}
+box <- groups_long %>% 
+  ggplot(aes(x = group, y = response)) +
+  geom_boxplot(width = 0.7, alpha = 0.8, 
+          aes(fill = group)) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")[1:2]) +
+  labs(x = "Group",
+       y = "Response",
+       caption = paste0("Hmmmmm...\nP = ", 
+                        signif(wilcox.test(group1, group2)$p.value, 2),
+                        " (Wilcoxon rank sum test)")) +
+  theme_classic() +
+  theme(
+    text = element_text(size = 12, face = "bold", color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "none",
+    plot.title = element_text(size = 10),
+    plot.caption = element_text(hjust = 0)
+  ) +
+  ggtitle(
+    paste0(
+      "group1: median = ", signif(median(group1), 2), 
+      "; IQR = ", signif(IQR(group1), 2), "\n",
+      "group2: median = ", signif(median(group2), 2), 
+      "; IQR = ", signif(IQR(group2), 2)
+    )
+  )
+
+box
+```
+## Dot plot
+```{r}
+dotplot <- groups_long %>% 
+  ggplot(aes(x = group, y = response)) +
+  ggbeeswarm::geom_quasirandom(
+    shape = 21, color = "white", 
+    alpha = 0.8, size = 3,
+    aes(fill = group)
+  ) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")[1:2]) +
+  labs(x = "Group",
+       y = "Response",
+        caption = paste0("OH!!!\nP = ", 
+                        signif(ks.test(group1, group2)$p.value, 2),
+                        " (Kolmogorov–Smirnov test)")) +
+  theme_classic() +
+  theme(
+    text = element_text(size = 12, face = "bold", color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "none",
+    plot.title = element_text(size = 10),
+    plot.caption = element_text(hjust = 0)
+  ) +
+  ggtitle(
+    paste0(
+      "group1: median = ", signif(median(group1), 2), 
+      "; IQR = ", signif(IQR(group1), 2), "\n",
+      "group2: median = ", signif(median(group2), 2), 
+      "; IQR = ", signif(IQR(group2), 2)
+    )
+  )
+
+dotplot 
+```
+# combine plots
+```{r}
+wrap_plots(
+  bar, box, dotplot, nrow = 1
+)
+
+ggsave("../Results/dont_bar_plot.svg", height = 5, width = 10)
+ggsave("../Results/dont_bar_plot.png", height = 5, width = 10)
+```
+

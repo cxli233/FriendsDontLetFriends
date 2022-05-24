@@ -1,0 +1,127 @@
+---
+title: "small_n"
+author: "Chenxin Li"
+date: "4/12/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an Rmarkdown document.If you don't have the rmarkdown package, you will have to install it to run this. 
+The grey areas are code chunks. To run a code chunk click the green triangle at the upper right of each chunk. 
+
+# Packages 
+```{r}
+library(tidyverse) 
+
+library(emmeans) # for estimated marginal means and stats 
+
+library(RColorBrewer) # for colors 
+
+library(patchwork) # for putting ggplot objects together 
+```
+
+# Data
+Generate three sets of data from a normal distribution with mean = 1 and sd = 1.
+
+```{r}
+set.seed(666) # 
+
+data_set <- replicate(rnorm(5, mean = 1, sd  = 1), n = 3, simplify = T) %>% 
+  as.data.frame() %>% 
+  gather("sample", "Response", 1:3) %>% 
+  mutate(Group = str_replace(sample, "V", "group"))
+
+
+head(data_set) 
+```
+# Stats
+```{r}
+model_1 <- lm(Response ~ Group, data = data_set)
+anova(model_1)
+
+emmeans(model_1, ~Group)
+```
+Group means are clearly not different, as they are sampled from the same distribution. 
+
+# Plot
+## Violin 
+```{r}
+violin_eg <- data_set %>% 
+  ggplot(aes(x = Group, y = Response)) +
+  geom_violin(aes(fill = Group), 
+              alpha = 0.8) +
+  stat_summary(geom = "point", fun = median) +
+  scale_fill_brewer(palette = "Accent") +
+  labs(
+    caption = "The distributions are different!\nI wonder what's going on."
+  ) +
+  theme_classic()+
+  theme(
+    text = element_text(size=12, color = "black", face = "bold"),
+    axis.text = element_text(color = "black"),
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0)
+  ) +
+  ggtitle("Points are median.")
+
+violin_eg
+```
+
+## Box plot
+```{r}
+box_eg <- data_set %>% 
+  ggplot(aes(x = Group, y = Response)) +
+  geom_boxplot(aes(fill = Group), 
+              alpha = 0.8) +
+  scale_fill_brewer(palette = "Accent") +
+  labs(
+    caption = "The quartiles are different!\nI wonder what's going on."
+  ) +
+  theme_classic()+
+  theme(
+    text = element_text(size=12, color = "black", face = "bold"),
+    axis.text = element_text(color = "black"),
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0)
+  ) +
+  ggtitle("Boxes span IQR.")
+
+box_eg
+```
+
+## jitter plot 
+```{r}
+jitter_eg <- data_set %>% 
+  ggplot(aes(x = Group, y = Response)) +
+  geom_point(aes(fill = Group), 
+             alpha = 0.8, shape = 21, size = 3, color = "grey40",
+             position = position_jitter(seed = 666, width = 0.2)) +
+  scale_fill_brewer(palette = "Accent") +
+  labs(
+    caption = "Never mind...\nToo little data to say anything."
+  ) +
+  theme_classic()+
+  theme(
+    text = element_text(size=12, color = "black", face = "bold"),
+    axis.text = element_text(color = "black"),
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0)
+  ) +
+  ggtitle(
+    "n = 5"
+  )
+
+jitter_eg
+```
+### together 
+```{r}
+wrap_plots(violin_eg, box_eg, jitter_eg,
+          nrow = 1)
+
+ggsave("../Results/Beware_of_small_n_box_violin_plot.svg", height = 5, width = 10)
+ggsave("../Results/Beware_of_small_n_box_violin_plot.png", height = 5, width = 10)
+```
+

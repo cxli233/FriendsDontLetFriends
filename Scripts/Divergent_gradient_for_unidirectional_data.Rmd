@@ -1,0 +1,205 @@
+---
+title: "Colorscales"
+author: "Chenxin Li"
+date: '2022-05-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an Rmarkdown document.If you don't have the rmarkdown package, you will have to install it to run this. 
+The grey areas are code chunks. To run a code chunk click the green triangle at the upper right of each chunk. 
+
+# Packages 
+```{r}
+library(tidyverse) 
+library(RColorBrewer) # for colors 
+library(viridis) # for colors 
+library(patchwork) # for putting graphs together 
+```
+
+# Simulate data 
+Just some arbitrary sequential/directional data 
+```{r}
+Dir1 <- data.frame(
+  "FPKM" = c(5, 10, 20, 40, 60, 80, 100, 120),
+  "Gene" = 1:8
+)  
+
+Dir2 <- data.frame(
+  "log2FC" = c(-10, -4, -2, 0, 2, 4, 10),
+  "Gene" = 1:7
+)
+
+Dir3 <- data.frame(
+  "z.score" = c(-2.5, -2, -1, 0, 1, 2, 2.5),
+  "Gene" = 1:7
+)
+  
+head(Dir3)
+```
+
+# Graph
+## Good example 1 
+```{r}
+A <- Dir1 %>% 
+ ggplot(aes(x = Gene, y = FPKM)) +
+  geom_hline(yintercept = 0, size = 1) +
+  geom_segment(aes(x = Gene, xend = Gene), 
+               yend = 0, size = 1.2, alpha = 0.8, color = "grey60") +
+  geom_point(shape = 21, size = 4, aes(fill = FPKM)) +
+  scale_fill_gradientn(colors = viridis(n = 10)) +
+  labs(caption = "This is good.") +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14, color = "black"), 
+    axis.text = element_text(color = "black"), 
+    axis.text.y = element_blank(), 
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0, size = 12)
+  ) +
+  coord_flip()+
+  ggtitle("Darkest color = Min\nLightest color = Max")
+
+B <- Dir1 %>% 
+  ggplot(aes(x = " ", y = Gene)) +
+  geom_tile(aes(fill = FPKM)) +
+  scale_fill_gradientn(colors = viridis(n = 10)) +
+  theme_void() +
+  theme(
+    legend.position = "none"
+  )
+
+Good1 <- wrap_plots(A, B, nrow = 1, widths = c(1, 0.1))
+
+Good1
+```
+This is a good example, where lightest color = max, and darkest color = min. 
+
+
+## Good example 2 
+```{r}
+C <- Dir2 %>% 
+ ggplot(aes(x = Gene, y = log2FC)) +
+  geom_hline(yintercept = 0, size = 1) +
+  geom_segment(aes(x = Gene, xend = Gene), 
+               yend = 0, size = 1.2, alpha = 0.8, color = "grey60") +
+  geom_point(shape = 21, size = 4, aes(fill = log2FC)) +
+  scale_fill_gradientn(colors = rev(brewer.pal(11, "RdBu"))) +
+  labs(caption = "This is good.") +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14, color = "black"), 
+    axis.text = element_text(color = "black"), 
+    axis.text.y = element_blank(), 
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0, size = 12)
+  ) +
+  coord_flip()+
+  ggtitle("Lightest color = 0\nDarkest colors = Max absolutes")
+
+D <- Dir2 %>% 
+  ggplot(aes(x = " ", y = Gene)) +
+  geom_tile(aes(fill = log2FC)) +
+  scale_fill_gradientn(colors = rev(brewer.pal(11, "RdBu"))) +
+  theme_void() +
+  theme(
+    legend.position = "none"
+  )
+
+Good2 <- wrap_plots(C, D, nrow = 1, widths = c(1, 0.1))
+
+Good2
+```
+This is a good example, where lightest color = 0 and have a special meaning, and darkest colors = max absolute values.  
+
+## Good example 3
+```{r}
+E <- Dir3 %>% 
+ ggplot(aes(x = Gene, y = z.score)) +
+  geom_hline(yintercept = 0, size = 1) +
+  geom_segment(aes(x = Gene, xend = Gene), 
+               yend = 0, size = 1.2, alpha = 0.8, color = "grey60") +
+  geom_point(shape = 21, size = 4, aes(fill = z.score)) +
+  scale_fill_gradientn(colors = brewer.pal(9, "YlGnBu")) +
+  labs(caption = "This is good.",
+       y = "z score") +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14, color = "black"), 
+    axis.text = element_text(color = "black"), 
+    axis.text.y = element_blank(), 
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0, size = 12)
+  ) +
+  coord_flip()+
+  ggtitle("Darkest color = Max\nLightest color = Min")
+
+eF <- Dir3 %>% 
+  ggplot(aes(x = " ", y = Gene)) +
+  geom_tile(aes(fill = z.score)) +
+  scale_fill_gradientn(colors = brewer.pal(9, "YlGnBu")) +
+  theme_void() +
+  theme(
+    legend.position = "none"
+  )
+
+Good3 <- wrap_plots(E, eF, nrow = 1, widths = c(1, 0.1))
+
+Good3
+```
+
+This is a good example, where lightest color = min, and darkest colors = max. 
+
+## Bad example 
+```{r}
+G <- Dir1 %>% 
+ ggplot(aes(x = Gene, y = FPKM)) +
+  geom_hline(yintercept = 0, size = 1) +
+  geom_segment(aes(x = Gene, xend = Gene), 
+               yend = 0, size = 1.2, alpha = 0.8, color = "grey60") +
+  geom_point(shape = 21, size = 4, aes(fill = FPKM)) +
+  scale_fill_gradientn(colors = rev(brewer.pal(11, "RdBu"))) +
+  labs(caption = "A data visualization sin") +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14, color = "black"), 
+    axis.text = element_text(color = "black"), 
+    axis.text.y = element_blank(), 
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0, size = 12)
+  ) +
+  coord_flip()+
+  ggtitle("Lighest color means nothing\n(neither mean nor median).")
+
+H <- Dir1 %>% 
+  ggplot(aes(x = " ", y = Gene)) +
+  geom_tile(aes(fill = FPKM)) +
+  scale_fill_gradientn(colors = rev(brewer.pal(11, "RdBu"))) +
+  theme_void() +
+  theme(
+    legend.position = "none"
+  )
+
+Bad <- wrap_plots(G, H, nrow = 1, widths = c(1, 0.1))
+
+Bad
+```
+
+This is a bad example and a data visualization sin. 
+Somehow the lightest color does not mean anything special. 
+
+# Put them all together
+```{r}
+wrap_plots(
+  Good1, Good2, Good3, Bad,
+  nrow = 2, ncol = 2
+)
+
+ggsave("../Results/ColorScales.svg", height = 7.5, width = 7.5, bg = "white")
+ggsave("../Results/ColorScales.png", height = 7.5, width = 7.5, bg = "white")
+```
+
+

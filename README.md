@@ -21,7 +21,7 @@ This has to be the first one.
 Means separation plots are some of the most common in scientific publications. 
 We have groups, which contains multiple observations; they may have different means, variances, and distributions. 
 
-![No Bar Plots for Means Separation](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_bar_plot.svg) 
+![No Bar Plots for Means Separation](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_bar_plot.png) 
 
 In this example, two groups have similar means and standard deviations, but quite different distributions. **Are they really "the same"?**
 Just don't use bar plot for means separation, or at least check a couple things before settling down on a bar plot. 
@@ -33,7 +33,7 @@ Here is a pulication. [Weissgerber et al., 2015, PLOS Biology](https://journals.
 
 This is quite common in the literature as well, but unfortunately, violin plots (or any sort of smoothed distribution curves) make no sense for small n. 
 
-![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.svg) 
+![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.png) 
 
 Distributions and quartiles can vary widely with small n, even if the underlying observations are similar. 
 Distribution and quartiles are only meaningful with large n. 
@@ -45,7 +45,7 @@ The quartiles only stablize when n gets larger than 50.
 Excuse my language, but this is a truly data visualization sin, and again quite common. 
 I can understand why this error is common, because it appears that many of us have not spent a lot of thoughts on this issue. 
 
-![Are You Using the Right Color Scale for Your Data?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/ColorScales.svg)
+![Are You Using the Right Color Scale for Your Data?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/ColorScales.png)
 
 Color scales are pretty, but we have to extra careful.
 When color scales (or color gradients) are used to represent numerical data, the darkest and lightest colors should have special meanings.
@@ -59,7 +59,7 @@ We talked about no bar charts for means separation, but this is a different issu
 It has to do with presenting results of a multi-factorial experiment. 
 Bar plot meadows are very common in scientific publications and unfortunately also *ineffective* in communicating the results. 
 
-![Horrendous Giant Bar Plot vs. Better Designed Plot](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/AvoidBarPlotMeadow.svg)
+![Horrendous Giant Bar Plot vs. Better Designed Plot](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/AvoidBarPlotMeadow.png)
 
 Data from: [Matand et al., 2020, BMC Plant Biology](https://link.springer.com/article/10.1186/s12870-020-2243-7)
 

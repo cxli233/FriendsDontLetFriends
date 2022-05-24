@@ -15,6 +15,7 @@ The grey areas are code chunks. To run a code chunk click the green triangle at 
 # Packages 
 ```{r}
 library(tidyverse) 
+library(ggbeeswarm) # to make jitter plots  
 library(readxl) # to load excel files 
 
 library(viridis) # for the colors 

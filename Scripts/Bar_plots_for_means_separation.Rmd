@@ -15,6 +15,7 @@ The grey areas are code chunks. To run a code chunk click the green triangle at 
 # Package
 ```{r}
 library(tidyverse)
+library(ggbeeswarm) # to make jitter plots  
 library(RColorBrewer) # for the colors 
 library(patchwork) # for putting ggplot objects into one graph 
 ```

@@ -78,8 +78,8 @@ However, for heatmaps to be effective, we have to consider the ordering of rows 
 
 ![A Heatmap before and after reordering rows and columns](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_rows_and_columns_for_heatmap.png?raw=true) 
 
-In this examples, I have cells as columns and features as rows. Each grid is showing z scores. 
-It is impossible to get anyting useful out of the heatmap without reordering rows and columns. 
+In this example, I have cells as columns and features as rows. Each grid is showing z scores. 
+It is impossible to get anything useful out of the heatmap without reordering rows and columns. 
 We can reorder rows and columns using clustering, but that is not the only way. 
 Of course, if the rows and columns are mapping to physical entities (rows and columns of a 96-well plate), then you can't reorder them. 
 But it is a very good idea to at least consider reordering rows and columns. 

@@ -1,0 +1,133 @@
+---
+title: "Reorder_rows_cols_for_heatmap"
+author: "Chenxin Li"
+date: '2022-06-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Friends don't let friends make heatmap without (considering) reordering rows and columns 
+
+# packages 
+```{r}
+library(tidyverse) 
+
+library(RColorBrewer) # for the colors 
+library(viridis) # for the colors 
+library(patchwork) # for putting graphs together 
+```
+
+# Load data
+```{r}
+heatmap_data <- read_csv("../Data/deidentified_cell_feature_data.csv")
+
+head(heatmap_data)
+```
+
+This is from unpublished data, so I had to de-identify them. 
+This is already a tidy data frame, where each row is a cell.
+
+# Check summary 
+```{r}
+heatmap_data %>% 
+  group_by(cell_type) %>% 
+  count()
+```
+The cell types have already been identified - 3 cell types
+
+```{r}
+heatmap_data %>% 
+  group_by(feature) %>% 
+  count() %>% 
+  nrow()
+```
+
+There are 14 features that were recorded for each cell. 
+
+
+# Bad example
+```{r}
+without_reordering <- heatmap_data %>% 
+  mutate(z2 = case_when(
+    z >= 3 ~ 3,
+    T ~ z
+  )) %>% 
+  ggplot(aes(x = cell, y = feature)) +
+  geom_tile(aes(fill = z2)) +
+  scale_fill_gradientn(colors = brewer.pal(9, "PuBuGn"), 
+                       breaks = c(0, 3),
+                       labels = c("0", ">3")) +
+  scale_x_discrete(labels = NULL) +
+  labs(x = "Cell",
+       y = "Feature",
+       fill = "z score",
+       caption = "Am I looking at a glitching TV?\n",
+       title = "Before reordering rows and columns") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "bottom",
+    axis.ticks.x = element_blank(),
+    plot.caption = element_text(hjust = 0),
+    plot.title = element_text(size = 12, face = "bold")
+  )
+
+without_reordering
+```
+
+# Good example
+## Reorder rows and columns 
+```{r}
+after_reordering <- heatmap_data %>% 
+  mutate(z2 = case_when(
+    z >= 3 ~ 3,
+    T ~ z
+  )) %>% 
+  mutate(tag = case_when(
+    str_detect(feature, " 7") ~ 1,
+    str_detect(feature, " 8| 6| 1$") ~ 2,
+    str_detect(feature, " 2| 3| 4| 10") ~ 4,
+    T ~ 3
+  )) %>% 
+  mutate(feature = reorder(feature, -tag)) %>% 
+  ggplot(aes(x = cell, y = feature)) +
+  facet_grid(. ~ cell_type, scales = "free_x", space = "free_x") +
+  geom_tile(aes(fill = z2)) +
+  scale_fill_gradientn(colors = brewer.pal(9, "PuBuGn"), 
+                       breaks = c(0, 3),
+                       labels = c("0", ">3")) +
+  scale_x_discrete(labels = NULL) +
+  labs(x = "Cell",
+       y = "Feature",
+       fill = "z score",
+       caption = "Much better.",
+       title = "After reordering rows and columns") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "bottom",
+    axis.ticks.x = element_blank(),
+    plot.caption = element_text(hjust = 0),
+    plot.title = element_text(size = 12, face = "bold")
+  )
+
+after_reordering
+```
+
+```{r}
+wrap_plots(without_reordering, 
+           after_reordering, 
+           nrow = 2)
+
+ggsave("../Results/Reorder_rows_and_columns_for_heatmap.svg", height = 8, width = 9.5, bg = "white")
+ggsave("../Results/Reorder_rows_and_columns_for_heatmap.png", height = 8, width = 9.5, bg = "white")
+```
+
+
+
+

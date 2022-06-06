@@ -71,7 +71,20 @@ To communicate results of a multi-factorial experiment, it requires thoughtful d
 In this example, I focus on comparing the effect of `Treatment` & `Explant` on `Response` at the level of each `Variety`. 
 However, if the focus is the effect of `Treatment` & `Variety` on `Response` at the level of each `Exaplant`, then it will require a different layout. 
 
+# 5. Friends Don't Let Friends Make Heatmap without (Considering) Reordering Rows & Columns 
+
+Heatmaps are very common in scientific publications, and *very very* common in omics papers. 
+However, for heatmaps to be effective, we have to consider the ordering of rows & columns. 
+
+![A Heatmap before and after reordering rows and columns](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_rows_and_columns_for_heatmap.png?raw=true) 
+
+In this examples, I have cells as columns and features as rows. Each grid is showing z scores. 
+It is impossible to get anyting useful out of the heatmap without reordering rows and columns. 
+We can reorder rows and columns using clustering, but that is not the only way. 
+Of course, if the rows and columns are mapping to physical entities (rows and columns of a 96-well plate), then you can't reorder them. 
+But it is a very good idea to at least consider reordering rows and columns. 
+
 # Conclusion (?)
 
 That's it for now. I will update this when I have the time (and inspirations) to produce more examples. 
-The next one is probably "Friends Don't Let Friends Make Heatmap without Reordering Rows and Columns". Stay tuned.
+The next one is probably "Friends Don't Let Friends Make Heatmap without Checking distribution of values". Stay tuned.

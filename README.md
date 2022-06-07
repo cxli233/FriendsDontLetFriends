@@ -84,7 +84,19 @@ We can reorder rows and columns using clustering, but that is not the only way.
 Of course, if the rows and columns are mapping to physical entities (rows and columns of a 96-well plate), then you can't reorder them. 
 But it is a very good idea to at least consider reordering rows and columns. 
 
+# 6. Friends Don't Let Friends Make Heatmap without Checking Outliers 
+
+Outliers in heatmap can really change how we perceive and interpret the visualization. 
+This generalizes to all sort of visualizations that use colors to represent numeric data.
+Let me show you an example:
+
+![Did you check outliers](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_outliers_for_heatmap.png)
+
+In this example, I have 2 observations. For each observations, I measured 20 features. 
+Without checking for outliers, it may appear that the 2 observations are overall similar, except at 2 features. 
+However, after maxing out the color scale around 95th percentile of the data, it reveals that the two observations are distinct across all features. 
+
 # Conclusion (?)
 
 That's it for now. I will update this when I have the time (and inspirations) to produce more examples. 
-The next one is probably "Friends Don't Let Friends Make Heatmap without Checking distribution of values". Stay tuned.
+Not sure what the next one will be, but stay tuned! 

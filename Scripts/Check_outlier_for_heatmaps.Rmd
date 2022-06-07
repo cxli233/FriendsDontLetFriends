@@ -1,0 +1,166 @@
+---
+title: "CheckOutlierForHeatmap"
+author: "Chenxin Li"
+date: '2022-06-07'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse)
+library(patchwork)
+library(RColorBrewer)
+library(viridis)
+```
+
+# Data
+I will simulate some data. You can ignore this chunk. 
+```{r}
+set.seed(666)
+
+group1 <- rnorm(mean = 1, sd = 0.2, n = 8)
+group2 <- rnorm(mean = 0, sd = 0.2, n = 12)
+
+group3 <- rnorm(mean = 0, sd = 0.2, n = 8)
+group4 <- rnorm(mean = 1, sd = 0.2, n = 10)
+
+group5 <- rnorm(mean = 10, sd = 1, n = 2)
+```
+
+
+```{r}
+toydata <- data.frame(
+  observation1 = c(group1, group2),
+  observation2 = c(group3, group4, group5)
+  ) %>% 
+  mutate(feature = 1:20) %>% 
+  pivot_longer(cols = !feature, names_to = "observation", values_to = "value") %>% 
+  mutate(observation2 = str_remove(observation, "observation"))
+
+toydata
+```
+# Plot
+## Without checking outliers 
+```{r}
+p1 <- toydata %>% 
+  mutate(observation2 = fct_rev(observation2)) %>% 
+  ggplot(aes(x = observation2, y = feature)) +
+  geom_tile(aes(fill = value)) +
+  scale_fill_gradientn(colors = viridis(n = 10)) +
+  labs(x = "Observations",
+       y = "Features",
+       caption = "Only two values are different!\n",
+       title = "Without checking for outliers") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+   # legend.position = "bottom",
+    plot.caption = element_text(hjust = 0),
+    plot.title = element_text(size = 12, face = "bold")
+  ) +
+  coord_flip()
+
+p1
+```
+
+## Check for outliers 
+```{r}
+p2 <- toydata %>% 
+  mutate(observation2 = fct_rev(observation2)) %>%
+  mutate(rank = rank(value, ties.method = "first")) %>% 
+  ggplot(aes(x = value, y = rank)) +
+  geom_point(shape = 21, color = "grey20", 
+             aes(fill = value), size = 3) +
+  scale_fill_gradientn(colors = viridis(n = 10)) +
+  labs(caption = "Wait...\n",
+       title = "Did you check outliers?") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0),
+    plot.title = element_text(size = 12, face = "bold")
+  )
+
+p2 
+```
+
+## Max out colors to address outliers 
+```{r}
+quantile(toydata$value, 0.95) 
+```
+We can max out the color scale around 95th percentile. Let's see what that does. 
+
+```{r}
+p3 <- toydata %>% 
+  mutate(observation2 = fct_rev(observation2)) %>%
+  mutate(rank = rank(value, ties.method = "first")) %>% 
+  mutate(value2 = case_when(
+    value >= 2 ~ 2,
+    T ~ value
+  )) %>% 
+  ggplot(aes(x = value, y = rank)) +
+  geom_point(shape = 21, color = "grey20", 
+             aes(fill = value2), size = 3) +
+  scale_fill_gradientn(colors = viridis(n = 10),
+                       breaks = c(0, 1, 2),
+                       labels = c("0", "1", ">2")
+                       ) +
+  labs(fill = "value",
+       caption = "That's better...",
+       title = "Lower values better visualized") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+    legend.position = "none",
+    plot.caption = element_text(hjust = 0),
+    plot.title = element_text(size = 12, face = "bold")
+  )
+
+p3
+```
+
+
+```{r}
+p4 <- toydata %>% 
+  mutate(observation2 = fct_rev(observation2)) %>% 
+  mutate(value2 = case_when(
+    value >= 1.5 ~ 2,
+    T ~ value
+  )) %>% 
+  ggplot(aes(x = observation2, y = feature)) +
+  geom_tile(aes(fill = value2)) +
+  scale_fill_gradientn(colors = viridis(n = 10),
+                       breaks = c(0, 1, 2),
+                       labels = c("0", "1", ">2")
+                       ) +
+  labs(x = "Observations",
+       y = "Features",
+       fill = "value",
+       caption = "Two observations are very different!",
+       title = "Maxed out color around 95th percentile") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+    #legend.position = "bottom",
+    plot.caption = element_text(hjust = 0),
+    plot.title = element_text(size = 12, face = "bold")
+  ) +
+  coord_flip()
+
+p4
+```
+# Put graphs together 
+```{r}
+wrap_plots(p1, p2, p4, p3, 
+           nrow = 2, ncol = 2, 
+           widths = c(1, 0.7))
+
+ggsave("../Results/Check_outliers_for_heatmap.svg", height = 5, width = 8, bg = "white")
+ggsave("../Results/Check_outliers_for_heatmap.png", height = 5, width = 8, bg = "white")
+```
+

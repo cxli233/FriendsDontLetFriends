@@ -1,0 +1,160 @@
+---
+title: "CheckRangeAtFactorLevel"
+author: "Chenxin Li"
+date: '2022-07-01'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse) 
+library(ggbeeswarm) # to make jitter plots 
+
+library(emmeans) # for estimated marginal means and stats 
+
+library(RColorBrewer) # for colors 
+
+library(patchwork) # for putting ggplot objects together 
+```
+
+# Data 
+```{r}
+# Generate a toy example here 
+set.seed(666)
+
+M1 <- data.frame(
+  conc = rnorm(n = 8, mean = 0.03, sd = 0.01)
+) %>% 
+  mutate(group = "ctrl") %>% 
+  rbind(
+    data.frame(
+      conc = rnorm(n = 6, mean = 0.25, sd = 0.02)
+    ) %>% 
+      mutate(group = "trt")
+  ) %>% 
+  mutate(metabolite = "Compound 1")
+
+M2 <- data.frame(
+  conc = rnorm(n = 8, mean = 6, sd = 1)
+) %>% 
+  mutate(group = "ctrl") %>% 
+  rbind(
+    data.frame(
+      conc = rnorm(n = 6, mean = 5.5, sd = 1.1)
+    ) %>% 
+      mutate(group = "trt")
+  ) %>% 
+  mutate(metabolite = "Compound 2")
+
+M3 <- data.frame(
+  conc = rnorm(n = 8, mean = 20, sd = 0.5)
+) %>% 
+  mutate(group = "ctrl") %>% 
+  rbind(
+    data.frame(
+      conc = rnorm(n = 6, mean = 19.5, sd = 1.2)
+    ) %>% 
+      mutate(group = "trt")
+  ) %>% 
+  mutate(metabolite = "Compound 3")
+
+toydata <- rbind(
+  M1, M2, M3
+)
+
+head(toydata)
+```
+
+In this hypothetical example, we have 3 metabolites that we measured across two groups: 1 control group and 1 treatment group. 
+
+# Graph
+## Bad example
+```{r}
+same_scale <- toydata %>% 
+  ggplot(aes(x = group, y = conc)) +
+  facet_grid(. ~ metabolite) +
+  geom_bar(stat = "summary", fill = NA, aes(color = group), 
+           alpha = 0.8, fun = mean, width = 0.5, size = 0.8) +
+  ggbeeswarm::geom_quasirandom(
+    shape = 21, size = 2.5, alpha = 0.8, color = "white",
+    aes(fill = group), width = 0.2
+  ) +
+  scale_fill_manual(values = c("grey20", "tomato1")) +
+  scale_color_manual(values = c("grey20", "tomato1")) +
+  labs(y = "Conc.",
+       x = "Group",
+       title = "Basic layout",
+       caption = "My treatment wasn't doing anything!\n") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    panel.spacing = unit(1, "lines"),
+    title = element_text(size = 12, face = "bold"),
+    plot.caption= element_text(size = 12, hjust = 0)
+  )
+
+same_scale
+```
+
+## Good example 
+### stat 
+```{r}
+model_conc <- lm(log(conc) ~ metabolite * group, data = toydata)
+anova(model_conc)
+```
+```{r}
+est_conc <- emmeans(model_conc, pairwise ~ group | metabolite)
+
+conc_contrast <- est_conc$contrasts %>% 
+  as.data.frame()
+
+conc_contrast
+```
+
+```{r}
+free_scale <- toydata %>% 
+  ggplot(aes(x = group, y = conc)) +
+  facet_wrap(. ~ metabolite, scales = "free_y") +
+  geom_bar(stat = "summary", fill = NA, aes(color = group), 
+           alpha = 0.8, fun = mean, width = 0.5, size = 0.8) +
+  ggbeeswarm::geom_quasirandom(
+    shape = 21, size = 2.5, alpha = 0.8, color = "white",
+    aes(fill = group), width = 0.2
+  ) +
+  geom_text(data = conc_contrast, aes(label = paste0(
+    "P = ", signif(p.value, 2)
+  )), size = 3.5, x = 1.5, y = Inf, vjust = 1.75) +
+  scale_fill_manual(values = c("grey20", "tomato1")) +
+  scale_color_manual(values = c("grey20", "tomato1")) +
+  labs(y = "Conc.",
+       x = "Group",
+       title = "Did you check range at each factor level?",
+       caption = "OH!!!") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    panel.spacing = unit(1, "lines"),
+    title = element_text(size = 12, face = "bold"),
+    plot.caption= element_text(size = 12, hjust = 0)
+  )
+
+free_scale
+```
+
+# Put them together
+```{r}
+wrap_plots(same_scale, free_scale, nrow = 2)
+
+ggsave("../Results/Check_range_at_factor_level.svg", height = 6, width = 5, bg = "white")
+ggsave("../Results/Check_range_at_factor_level.png", height = 6, width = 5, bg = "white")
+```
+
+

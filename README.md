@@ -96,6 +96,17 @@ In this example, I have 2 observations. For each observations, I measured 20 fea
 Without checking for outliers, it may appear that the 2 observations are overall similar, except at 2 features. 
 However, after maxing out the color scale around 95th percentile of the data, it reveals that the two observations are distinct across all features. 
 
+# 7. Friends Don't Let Friends Forget to Check Data Range at Each Factor Level 
+
+This is a common issue that many of us have encountered. 
+In a multifactor experiment, sometimes the range of the response variable changes widely between different factor levels. 
+
+![Did you check data range at each factor level](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_range_at_factor_level.png)
+
+This hypothetical experiment measured 3 compounds across 2 groups (control vs. treatment). 
+Without checking data range for each compound, you will likely have missed that the treatment had a strong effect on compound 1.
+This is because the concentration of compound 1 has a much narrower range than the other compounds in this experiment. 
+
 # Conclusion (?)
 
 That's it for now. I will update this when I have the time (and inspirations) to produce more examples. 

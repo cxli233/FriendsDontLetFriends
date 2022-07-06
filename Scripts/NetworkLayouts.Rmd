@@ -1,0 +1,146 @@
+---
+title: "Fiends don't let friends make network graphs without trying different layouts"
+author: "Chenxin Li"
+date: '2022-07-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Pacakges 
+```{r}
+library(tidyverse)
+library(igraph) # make graph (network) object
+library(ggraph) # graphical grammar network graphs 
+library(viridis)
+library(cowplot)
+```
+
+# Data 
+```{r}
+edge_table <- read_csv("../Data/Network_Example/Fig4c_1.csv", col_types = cols())
+node_table <- read_csv("../Data/Network_Example/Fig4c_2.csv", col_types = cols())
+
+head(edge_table)
+head(node_table)
+```
+Data from preprint: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/2022.07.04.498697v1).
+
+# Produce graph/network object 
+To make a network, you need two things. 
+
+1. The edge table. Each row is an edge and at least two columns: from and to. 
+2. The node table, which is technically optional. It stores additional attributes of nodes. 
+
+```{r}
+network_object <- graph_from_data_frame(edge_table,
+                                     vertices = node_table %>% 
+                                       mutate(tag2 = case_when(
+                                         is.na(tag) ~ "",
+                                         T ~ tag2)) %>% 
+                                       mutate(tag3 = case_when(
+                          str_detect(tag, "ORCA|MYC|DAT|D4H|SS|NMT|GS|STR|LAMT|TDC|ISY|IO|G8H") ~ tag,
+                                       )),
+                                     directed = F)
+```
+
+# Circular
+```{r}
+Circular <- ggraph(network_object, layout = "circle") +
+  geom_edge_diagonal(color = "grey70", width = 0.5, alpha = 0.5) +
+  geom_node_point(alpha = 0.8, color = "white", shape = 21,
+                  aes(fill = segment, size = tag2)) + 
+  geom_node_text(aes(label = tag3), size = 3, repel = T, max.overlaps = 10) +
+  scale_edge_color_manual(values = c("steelblue3", "tomato1")) +
+  scale_fill_manual(values = c(viridis(5, option = "D"),  "white"),
+                    limits = c("TF", "MEP", "Iridoid", "Alkaloid", "Late Alkaloid", "")) +
+  scale_size_manual(values = c(1, 2.5),
+                    limits = c("", "known genes")) +
+  labs(fill = "Stage of pathway",
+       title = "Circular layout",
+       caption = "WTH is going on?\n") +
+  guides(size = "none",
+         fill = guide_legend(override.aes = list(size = 4), 
+                             title.position = "top", nrow = 3)) +
+  theme_void()+
+  theme(
+    text = element_text(size = 14), 
+    legend.position = "bottom",
+    legend.justification = 1,
+    title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0.2, size = 12)
+  )
+
+Circular
+```
+# MDS
+```{r}
+MDS <- ggraph(network_object, layout = "mds") +
+  geom_edge_diagonal(color = "grey70", width = 0.5, alpha = 0.5) +
+  geom_node_point(alpha = 0.8, color = "white", shape = 21,
+                  aes(fill = segment, size = tag2)) + 
+  geom_node_text(aes(label = tag3), size = 3, repel = T, max.overlaps = 10) +
+  scale_edge_color_manual(values = c("steelblue3", "tomato1")) +
+  scale_fill_manual(values = c(viridis(5, option = "D"),  "white"),
+                    limits = c("TF", "MEP", "Iridoid", "Alkaloid", "Late Alkaloid", "")) +
+  scale_size_manual(values = c(1, 2.5),
+                    limits = c("", "known genes")) +
+  labs(fill = "Stage of pathway",
+       title = "MDS layout",
+       caption = "WOW that looked\nreally different!") +
+  guides(size = "none",
+         fill = guide_legend(override.aes = list(size = 4), 
+                             title.position = "top", nrow = 3)) +
+  theme_void()+
+  theme(
+    text = element_text(size = 14), 
+    legend.position = "bottom",
+    legend.justification = 1,
+    title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0.2, size = 12)
+  )
+
+MDS
+```
+
+
+# kk 
+```{r}
+kk <- ggraph(network_object, layout = "kk") +
+  geom_edge_diagonal(color = "grey70", width = 0.5, alpha = 0.5) +
+  geom_node_point(alpha = 0.8, color = "white", shape = 21,
+                  aes(fill = segment, size = tag2)) + 
+  geom_node_text(aes(label = tag3), size = 3, repel = T, max.overlaps = 10) +
+  scale_edge_color_manual(values = c("steelblue3", "tomato1")) +
+  scale_fill_manual(values = c(viridis(5, option = "D"),  "white"),
+                    limits = c("TF", "MEP", "Iridoid", "Alkaloid", "Late Alkaloid", "")) +
+  scale_size_manual(values = c(1, 2.5),
+                    limits = c("", "known genes")) +
+  labs(fill = "Stage of pathway",
+       title = "Kamada-Kawai layout",
+       caption = "Better!\n") +
+  guides(size = "none",
+         fill = guide_legend(override.aes = list(size = 4), 
+                             title.position = "top", nrow = 3)) +
+  theme_void()+
+  theme(
+    text = element_text(size = 14), 
+    legend.position = "bottom",
+    legend.justification = 1,
+    title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0.2, size = 12)
+  )
+
+kk
+```
+# Put examples together 
+```{r}
+plot_grid(Circular, MDS, kk, 
+          nrow = 1, align = "h", axis = "lrtb")
+
+ggsave("../Results/TryDifferentLayouts.svg", width = 8, height = 4, bg = "white")
+ggsave("../Results/TryDifferentLayouts.png", width = 8, height = 4, bg = "white")
+```
+

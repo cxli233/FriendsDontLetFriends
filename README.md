@@ -107,6 +107,17 @@ This hypothetical experiment measured 3 compounds across 2 groups (control vs. t
 Without checking data range for each compound, you will likely have missed that the treatment had a strong effect on compound 1.
 This is because the concentration of compound 1 has a much narrower range than the other compounds in this experiment. 
 
+# 8. Friends Don't Let Friends Make Network Graphs without Trying Different Layouts
+
+Network graphs are common in scientific publications. They are super useful in presenting relationship data. 
+However, the apparence (not the topology) of the network can make a huge difference in determing if a network graph is effective. 
+
+![Try different network layouts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/TryDifferentLayouts.png) 
+
+Layouts can drastically change the appearance of networks, making them easier or harder to interpret.
+Here are 3 network graphs from the same data. They look very different from each other.
+Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/2022.07.04.498697v1) 
+
 # Conclusion (?)
 
 That's it for now. I will update this when I have the time (and inspirations) to produce more examples. 

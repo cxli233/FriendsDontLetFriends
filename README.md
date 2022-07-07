@@ -15,6 +15,17 @@ It requires R, RStudio, and the rmarkdown package.
 * RStudio: [RStudio Download](https://www.rstudio.com/products/rstudio/download/)
 * rmarkdown can be installed using the intall packages interface in RStudio
 
+# Table of contents
+
+1. [Friends Don't Let Friends Make Bar Plots For Mean Separation](https://github.com/cxli233/FriendsDontLetFriends#1-friends-dont-let-friends-make-bar-plots-for-means-separation)
+2. [Friends Don't Let Friends Make Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes)
+3. [Friends Don't Let Friends Use Bidirectional Color Scales for Unidirectional Data](https://github.com/cxli233/FriendsDontLetFriends#3-friends-dont-let-friends-use-bidirectional-color-scales-for-unidirectional-data)
+4. [Friends Don't Let Friends Make Bar Plot Meadow](https://github.com/cxli233/FriendsDontLetFriends#4-friends-dont-let-friends-make-bar-plot-meadow)
+5. [Friends Don't Let Friends Make Heatmap without Reordering Rows & Columns](https://github.com/cxli233/FriendsDontLetFriends#5-friends-dont-let-friends-make-heatmap-without-considering-reordering-rows--columns)
+6. [Friends Don't Let Friends Make Heatmap without Checking Outliers](https://github.com/cxli233/FriendsDontLetFriends#6-friends-dont-let-friends-make-heatmap-without-checking-outliers)
+7. [Friends Don't Let Friends Forget to Check Data Range at Each Factor Level](https://github.com/cxli233/FriendsDontLetFriends#7-friends-dont-let-friends-forget-to-check-data-range-at-each-factor-level)
+8. [Friends Don't Let Friends Make Network Graphs without Trying Different Layouts](https://github.com/cxli233/FriendsDontLetFriends#8-friends-dont-let-friends-make-network-graphs-without-trying-different-layouts) 
+
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
 This has to be the first one. 

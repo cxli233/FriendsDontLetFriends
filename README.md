@@ -25,6 +25,7 @@ It requires R, RStudio, and the rmarkdown package.
 6. [Friends Don't Let Friends Make Heatmap without Checking Outliers](https://github.com/cxli233/FriendsDontLetFriends#6-friends-dont-let-friends-make-heatmap-without-checking-outliers)
 7. [Friends Don't Let Friends Forget to Check Data Range at Each Factor Level](https://github.com/cxli233/FriendsDontLetFriends#7-friends-dont-let-friends-forget-to-check-data-range-at-each-factor-level)
 8. [Friends Don't Let Friends Make Network Graphs without Trying Different Layouts](https://github.com/cxli233/FriendsDontLetFriends#8-friends-dont-let-friends-make-network-graphs-without-trying-different-layouts) 
+9. [Friends Don't Let Friends Confuse Position and Length Based Visualizations](https://github.com/cxli233/FriendsDontLetFriends/blob/main/README.md#9-friends-dont-let-friends-confuse-position-based-visualizations-with-length-based-visualizations) 
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 

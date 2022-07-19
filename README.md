@@ -95,6 +95,8 @@ We can reorder rows and columns using clustering, but that is not the only way.
 Of course, if the rows and columns are mapping to physical entities (rows and columns of a 96-well plate), then you can't reorder them. 
 But it is a very good idea to at least consider reordering rows and columns. 
 
+Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/2022.07.04.498697v1) 
+
 # 6. Friends Don't Let Friends Make Heatmap without Checking Outliers 
 
 Outliers in heatmap can really change how we perceive and interpret the visualization. 
@@ -128,6 +130,22 @@ However, the apparence (not the topology) of the network can make a huge differe
 Layouts can drastically change the appearance of networks, making them easier or harder to interpret.
 Here are 3 network graphs from the same data. They look very different from each other.
 Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/2022.07.04.498697v1) 
+
+# 9. Friends Don't Let Friends Confuse Position-based Visualizations with Length-based Visualizations 
+
+This is always an elephant in the room and the essence of many misleading visualizations. 
+In this example, I measured a response variable across 3 time points. 
+Two of the following graphs are fine, but one of them is a data visualization crime. Can you see why? 
+
+![Position vs. length based visualizations](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Position_and_length_based_visualizations.png)
+
+In dot and line plots, values are represented by positions along the x and y axis.
+The same idea applies to other position based visualizations, such as box plots. 
+In bar plots, values are represented by the distance from the x axis, and thus the length of the bar. 
+
+The 3rd graph is not 0-based, which makes the bar length at time point 2 about 3x longer than that at time point 1.
+In fact, the true difference in means is closer to 1.6x. 
+I hope you can see how confusing length and position based visualizations can lead to misleading graphs.   
 
 # Conclusion (?)
 

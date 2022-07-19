@@ -1,0 +1,150 @@
+---
+title: "Position_vs_length_based_visualizations"
+author: "Chenxin Li"
+date: '2022-07-19'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse)
+library(RColorBrewer)
+library(cowplot)
+```
+
+# Data 
+This section simulate some data, you can ignore
+```{r}
+set.seed(666)
+Example_data1 <- rbind(
+  rnorm(3, mean = 5, sd = 0.5) %>%
+    as.data.frame() %>% 
+    mutate(time = 1),
+  rnorm(3, mean = 8, sd = 0.5) %>% 
+    as.data.frame() %>% 
+    mutate(time = 2),
+  rnorm(3, mean = 10, sd = 0.5) %>%
+    as.data.frame() %>% 
+    mutate(time = 3)
+) %>% 
+  rename(response = ".")
+
+head(Example_data1)
+```
+
+# Graph 
+Dot plots/line graphs are position based visualizations. 
+Values are determined by the position relative to x and y axis. 
+
+## Dot/line graphs 
+```{r}
+Dotline <- Example_data1 %>% 
+  ggplot(aes(x = time, y = response)) +
+  stat_summary(geom = "line", fun.data = mean_se, 
+               size = 1.1, alpha = 0.8, color = "grey60") +
+  geom_point(aes(fill = as.factor(time)), shape = 21, color = "grey20",
+             alpha = 0.8, size = 3, position = position_jitter(0.1, seed = 666)) +
+  stat_summary(geom = "errorbar", fun.data = mean_se,
+               width = 0.05, alpha = 0.8) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")) +
+  scale_x_continuous(breaks = c(1, 2, 3)) +
+  labs(x = "Time point",
+       y = "Response",
+       title = "Dot/line graphs are\nposition based",
+       caption = "\nValues represented by positions\nalong x & y axis") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  )
+
+Dotline
+```
+Same idea applies to box plot and other position based visualizations. 
+
+## Bar graphs 
+```{r}
+GoodBar <- Example_data1 %>% 
+  ggplot(aes(x = time, y = response)) +
+  stat_summary(geom = "bar", fun.data = mean_se, aes(color = as.factor(time)),
+               size = 1.1, alpha = 0.8, fill = NA, width = 0.5) +
+  geom_point(aes(fill = as.factor(time)), shape = 21, color = "grey20",
+             alpha = 0.8, size = 3, position = position_jitter(0.1, seed = 666)) +
+  stat_summary(geom = "errorbar", fun.data = mean_se,
+               width = 0.05, alpha = 0.8) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")) +
+  scale_color_manual(values = brewer.pal(8, "Accent")) +
+  scale_x_continuous(breaks = c(1, 2, 3)) +
+  labs(x = "Time point",
+       y = "\nResponse",
+       title = "Bar graphs are\nlength based",
+       caption = "\nValues represented by\ndistance from x axis") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  )
+
+GoodBar
+```
+
+## Bad example 
+```{r}
+Example_data1_s <- Example_data1 %>% 
+  group_by(time) %>% 
+  summarise(response = mean(response))
+
+head(Example_data1_s)
+```
+
+```{r}
+BadBar <- Example_data1 %>% 
+  ggplot(aes(x = time, y = response)) +
+  geom_rect(data = Example_data1_s,
+            aes(ymax = response, xmin = time-0.25, xmax = time+0.25,
+                color = as.factor(time)), 
+            ymin = 4.5, fill = NA, alpha = 0.8, size = 1.1) +
+  geom_point(aes(fill = as.factor(time)), shape = 21, color = "grey20",
+             alpha = 0.8, size = 3, position = position_jitter(0.1, seed = 666)) +
+  stat_summary(geom = "errorbar", fun.data = mean_se,
+               width = 0.05, alpha = 0.8) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")) +
+  scale_color_manual(values = brewer.pal(8, "Accent")) +
+  scale_x_continuous(breaks = c(1, 2, 3)) +
+  ylim(c(4.25, 11)) + 
+  labs(x = "Time point",
+       y = "\nResponse",
+       title = "NEVER DO THIS!",
+       caption = "\nBar lengths are\nmisleading") +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  )
+
+BadBar
+```
+
+# Put together 
+```{r}
+plot_grid(Dotline, GoodBar, BadBar, 
+          align = "h", axis = "lrtb", nrow = 1)
+
+ggsave("../Results/Position_and_length_based_visualizations.svg", height = 4, width = 8, bg = "white")
+ggsave("../Results/Position_and_length_based_visualizations.png", height = 4, width = 8, bg = "white")
+```
+
+

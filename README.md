@@ -148,6 +148,25 @@ The 3rd graph is not 0-based, which makes the bar length at time point 2 about 3
 In fact, the true difference in means is closer to 1.6x. 
 I hope you can see how confusing length and position based visualizations can lead to misleading graphs.   
 
+# 10. Friends Don't Let Friends Make Pie Chart 
+
+Pie chart is a common type of visualization for fractional data, where fractions add up to 100%. 
+This is achieved by dividing a circle into sectors, and the sectors add up to a full circle. 
+Pie charts have been criticized, because human are much worse in reading angles and area than reading lengths. 
+Here is a [blog post](https://www.data-to-viz.com/caveat/pie.html) that explores that. 
+
+![Don't make pie charts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_pie_chart.png)
+
+In this example, we have two groups, each contains 4 sub-category. 
+In classic pie charts, the angles (and thus arc lengths & sector area) represent the data. 
+The problem is that it is *very* difficult to compare between groups. 
+We can visually simplify the pie chart into donut charts, where the data are now represented by arc lengths. 
+However, if we want to use lengths to represent the data, why don't we just unwrap the donut and make stacked bars?
+In stacked bar graphs, bars are shown side-by-side and thus easier to compare across groups. 
+
+Fun fact: the scripts underlying stacked bars are much simplier than those underlying the pie charts and donut charts.
+If you want to produce the suboptimal graph types with ggplot, you actually have to work extra hard.
+
 # Conclusion (?)
 
 That's it for now. I will update this when I have the time (and inspirations) to produce more examples. 

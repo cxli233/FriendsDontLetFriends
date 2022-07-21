@@ -1,0 +1,168 @@
+---
+title: "NoPieCharts"
+author: "Chenxin Li"
+date: '2022-07-21'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse)
+library(RColorBrewer)
+library(patchwork)
+```
+
+# Data 
+This section simulate some data. You can ignore it. 
+```{r}
+group1 <- data.frame(
+  "Type" = c("Type I", "Type II", "Type III", "Type IV"),
+  "Percentage" = c(15, 35, 30, 20)
+)
+
+group2 <- data.frame(
+  "Type" = c("Type I", "Type II", "Type III", "Type IV"),
+  "Percentage" = c(10, 25, 35, 30)
+)
+
+head(group2)
+```
+# Graphs
+## Pie chart 
+```{r}
+g1_pie <- group1 %>% 
+  ggplot(aes(x = "", y = Percentage)) +
+  geom_bar(stat = "identity", width = 0.7,
+           color = "white",
+           aes(fill = Type)) +
+  annotate(geom = "text", x = -Inf, y = Inf, 
+           label = "Group 1", size = 4, hjust = 0.5, vjust = 0.5) +
+  labs(fill  = NULL,
+       title = "Pie charts:\nArc lengths & area\nrepresent data") +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  coord_polar("y", start = 0, direction = -1) +
+  theme_void() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(size = 12),
+    legend.position = "none"
+  )
+
+g2_pie <- group2 %>% 
+  ggplot(aes(x = "", y = Percentage)) +
+  geom_bar(stat = "identity", width = 0.7, 
+           color = "white",
+           aes(fill = Type)) +
+  annotate(geom = "text", x = -Inf, y = Inf, 
+           label = "Group 2", size = 4, hjust = 0.5, vjust = 0.5) +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  labs(fill  = NULL,
+       caption = "Hard to compare groups.\nArc length redundant with area.") +
+  coord_polar("y", start = 0, direction = -1) +
+  theme_void() +
+  theme(
+    text = element_text(size = 14),
+    plot.caption = element_text(hjust = 0),
+    legend.position = "none"
+  )
+
+pies <- wrap_plots(g1_pie, g2_pie, nrow = 2)
+pies
+```
+
+## Donut
+```{r}
+group1$ymax <- cumsum(group1$Percentage)
+group1$ymin <- c(0, head(group1$ymax, n = (nrow(group1)-1)))
+
+head(group1)
+
+group2$ymax <- cumsum(group2$Percentage)
+group2$ymin <- c(0, head(group2$ymax, n = (nrow(group1)-1)))
+
+head(group2)
+```
+
+```{r}
+g1_donut <- group1 %>% 
+  ggplot(aes(x = 1:4, y = Percentage)) +
+  geom_rect(aes(ymin = ymin, ymax = ymax, fill = Type), 
+            xmax = 4, xmin = 3, color = "white") +
+  annotate(geom = "text", x = 0, y = Inf, 
+           label = "Group 1", size = 4, hjust = 0.5, vjust = 0.5) +
+  labs(fill  = NULL,
+       title = "Donut charts:\nArc lengths\nrepresent data") +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  coord_polar(theta = "y", start = 0, direction = 1) +
+  theme_void() +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(size = 12),
+    legend.position = "none"
+  )
+
+g2_donut <- group2 %>% 
+  ggplot(aes(x = 1:4, y = Percentage)) +
+  geom_rect(aes(ymin = ymin, ymax = ymax, fill = Type), 
+            xmax = 4, xmin = 3, color = "white") +
+  annotate(geom = "text", x = 0, y = Inf, 
+           label = "Group 2", size = 4, hjust = 0.5, vjust = 0.5) +
+  labs(fill  = NULL,
+       caption = "Still hard to compare\ngroups.")  +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  coord_polar(theta = "y", start = 0, direction = 1) +
+  theme_void() +
+  theme(
+    text = element_text(size = 14),
+    plot.caption = element_text(hjust = 0),
+    legend.position = "none"
+  )
+
+donuts <- wrap_plots(g1_donut, g2_donut, nrow = 2)
+donuts
+```
+## Stacked bars
+```{r}
+TwoGroups <- rbind(
+  group1 %>% 
+    mutate(group = "1"),
+  group2 %>% 
+    mutate(group = "2")
+)
+
+head(TwoGroups)
+```
+
+```{r}
+StackedBar <- TwoGroups %>% 
+  ggplot(aes(x = group, y = Percentage)) +
+  geom_bar(stat = "identity", aes(fill = Type),
+           width = 0.5, color = "white") +
+  labs(fill  = NULL,
+       x = "Groups",
+       title = "Stacked Bars:\nJust unwrap\nthe polar coordinate!",
+       caption = "Easier to compare groups.\nData represented by bar heights.") +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+    axis.text = element_text(color = "black"),
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  )
+
+StackedBar
+```
+# Put them together
+```{r}
+wrap_plots(pies, donuts, StackedBar, nrow = 1, 
+           widths = c(1, 1, 0.4))
+
+ggsave("../Results/dont_pie_chart.svg", height = 4, width = 8, bg = "white")
+ggsave("../Results/dont_pie_chart.png", height = 4, width = 8, bg = "white")
+```
+

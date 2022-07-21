@@ -165,8 +165,8 @@ We can visually simplify the pie chart into donut charts, where the data are now
 However, if we want to use lengths to represent the data, why don't we just unwrap the donut and make stacked bars?
 In stacked bar graphs, bars are shown side-by-side and thus easier to compare across groups. 
 
-Fun fact: the scripts underlying stacked bars are much simplier than those underlying the pie charts and donut charts.
-If you want to produce the suboptimal graph types with ggplot, you actually have to work extra hard.
+Fun fact: the scripts underlying stacked bars are much simpler than those underlying the pie charts and donut charts.
+If you want to produce sub-optimal graph types with ggplot, you actually have to work extra hard.
 
 # Conclusion (?)
 

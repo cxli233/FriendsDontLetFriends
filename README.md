@@ -26,6 +26,7 @@ It requires R, RStudio, and the rmarkdown package.
 7. [Friends Don't Let Friends Forget to Check Data Range at Each Factor Level](https://github.com/cxli233/FriendsDontLetFriends#7-friends-dont-let-friends-forget-to-check-data-range-at-each-factor-level)
 8. [Friends Don't Let Friends Make Network Graphs without Trying Different Layouts](https://github.com/cxli233/FriendsDontLetFriends#8-friends-dont-let-friends-make-network-graphs-without-trying-different-layouts) 
 9. [Friends Don't Let Friends Confuse Position and Length Based Visualizations](https://github.com/cxli233/FriendsDontLetFriends#9-friends-dont-let-friends-confuse-position-based-visualizations-with-length-based-visualizations) 
+10. [Friends Don't Let Friends Make Pie Charts](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart) 
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 

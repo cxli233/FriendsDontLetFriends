@@ -178,8 +178,9 @@ In this example, we have 3 groups, each of which contains two sub-categories (Ty
 In concentric donuts, you might be tempted to say the data is represented by the arc length, which is in fact **inaccurate**. 
 The arc lengths on the outer rings are much longer than those in the inner rings. 
 Group 2 and Group 3 have the same exact values, but the arc lengths of Group 3 are much longer. 
-In fact the data is represented by the arc angle, which we are bad are reading. 
-Since outer rings are longer, the ordering of the groups (which group goes to which ring) has a big impact on the impression of the plot).
+In fact the data is represented by the *arc angle*, which we are bad are reading. 
+
+Since outer rings are longer, the ordering of the groups (which group goes to which ring) has a big impact on the impression of the plot.
 It can lead to the apparent paradox where larger values have shorter arcs. 
 The better (and simplier!) alternative is just unwrap the donuts and make a good old stacked bar plot. 
 BTW, this is also my main issue with [circos plots](http://circos.ca/) and other circular plot layouts.

@@ -1,0 +1,193 @@
+---
+title: "NoConcentricDonunts"
+author: "Chenxin Li"
+date: '2022-07-28'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse)
+library(RColorBrewer)
+library(patchwork) 
+```
+
+# Data 
+This section generate the data. 
+```{r}
+group1 <- data.frame(
+  "Type" = c("Type I", "Type II"),
+  "Percentage" = c(20, 80)
+)
+
+group2 <- data.frame(
+  "Type" = c("Type I", "Type II"),
+  "Percentage" = c(30, 70)
+)
+
+group3 <- data.frame(
+  "Type" = c("Type I", "Type II"),
+  "Percentage" = c(30, 70)
+)
+
+blank <- data.frame(
+  "Type" = c("Type I", "Type II"),
+  "Percentage" = c(0, 0)
+)
+
+head(group2)
+```
+
+In order for the concentric donuts to work, a "blank" data table is required as the first layer. You will see why. 
+ 
+ 
+The following section produces `ymax` and `ymin` values for the `geon_rect()` function.
+These are required to the concentric donuts. 
+
+```{r}
+group1$ymax <- cumsum(group1$Percentage)
+group1$ymin <- c(0, head(group1$ymax, n = (nrow(group1)-1)))
+
+group2$ymax <- cumsum(group2$Percentage)
+group2$ymin <- c(0, head(group2$ymax, n = (nrow(group2)-1)))
+
+group3$ymax <- cumsum(group3$Percentage)
+group3$ymin <- c(0, head(group3$ymax, n = (nrow(group3)-1)))
+
+blank$ymax <- cumsum(blank$Percentage)
+blank$ymin <- c(0, head(blank$ymax, n = (nrow(blank)-1)))
+
+head(blank)
+```
+
+
+```{r}
+example_data <- rbind(
+  blank %>% 
+    mutate(group = 0),
+  group1 %>% 
+    mutate(group = 1),
+  group2 %>% 
+    mutate(group = 2),
+  group3 %>% 
+    mutate(group = 3)
+)
+```
+
+
+# Graphics
+## Bad example 1
+```{r}
+bad_example_1 <- example_data %>% 
+  ggplot(aes(x = group, y = Percentage)) +
+  geom_rect(aes(ymax = ymax, ymin = ymin,
+                xmax = group-0.25, xmin = group+0.25, 
+                fill = Type), alpha = 0.8) +
+  annotate(geom = "text", label = c("Group1", "Group2", "Group3"), 
+           x = c(1, 2, 3), y = c(0, 0, 0), size = 4) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")[c(1, 5)])+
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Arc lenghts are misleading",
+       caption = "Outer rings = much longer arcs") +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    panel.grid = element_blank(),
+    axis.text.y = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  ) +
+  coord_polar(theta = "y")
+
+bad_example_1
+```
+You might be tempted to say the data is represented by the arc length, which is in fact inaccurate. 
+The arc length on the outer ring is much longer than that in the inner rings. 
+Group 2 and Group 3 have the same exact values, but the arc lengths of Group 3 are much longer. 
+In fact the data is represented by the arc angle, which we are bad are reading. 
+ 
+## Bad example 2
+```{r}
+bad_example_2 <- example_data %>% 
+  mutate(x = case_when(
+    group == 0 ~ 0,
+    group == 1 ~ 3,
+    group == 2 ~ 2,
+    group == 3 ~ 1
+  )) %>% 
+  mutate(xmax = x - 0.25) %>% 
+  mutate(xmin = x + 0.25) %>% 
+  ggplot(aes(x = x, y = Percentage)) +
+  geom_rect(aes(ymax = ymax, ymin = ymin,
+                xmax = xmax, xmin = xmin, 
+                fill = Type), alpha = 0.8) +
+  annotate(geom = "text", label = c("Group1", "Group2", "Group3"), 
+           x = c(3, 2, 1), y = c(0, 0, 0), size = 4) +
+  scale_fill_manual(values = brewer.pal(8, "Accent")[c(1,5)])+
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+        title = "Ring order matters",
+       caption = "Shorter arcs can have larger values") +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    panel.grid = element_blank(),
+    axis.text.y = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  ) +
+  coord_polar(theta = "y")
+
+bad_example_2
+```
+As you can see, the ordering of the categories (which group goes to which ring) has a big impact on the look of the graph. 
+
+## Good example 
+```{r}
+good_example <- example_data %>%
+  filter(group != 0) %>% 
+  mutate(Type = factor(Type, levels = c("Type II", "Type I"))) %>% 
+  ggplot(aes(x = as.factor(group), y = Percentage)) +
+  geom_bar(stat = "identity", aes(fill = Type), 
+           width = 0.5, alpha = 0.8, color = "white") +
+  scale_fill_manual(values = brewer.pal(8, "Accent")[c(1,5)],
+                    limits = c("Type I", "Type II"))+
+  labs(x = "Group",
+       y = "%",
+       fill = NULL,
+       title = "Just unwrap the donuts!",
+       caption = "Simple but better") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14, color = "black"),
+    axis.text = element_text(color = "black"),
+    legend.position = "top",
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(hjust = 0)
+  )  
+
+good_example
+```
+
+# Put them together 
+```{r}
+wrap_plots(bad_example_1, bad_example_2, good_example, 
+           nrow = 1, widths = c(1, 1, 0.75))
+
+ggsave("../Results/dont_concentric_donuts.svg", height = 4, width = 8, bg = "white")
+ggsave("../Results/dont_concentric_donuts.png", height = 4, width = 8, bg = "white")
+```
+
+ 
+

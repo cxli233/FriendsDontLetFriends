@@ -27,6 +27,7 @@ It requires R, RStudio, and the rmarkdown package.
 8. [Friends Don't Let Friends Make Network Graphs without Trying Different Layouts](https://github.com/cxli233/FriendsDontLetFriends#8-friends-dont-let-friends-make-network-graphs-without-trying-different-layouts) 
 9. [Friends Don't Let Friends Confuse Position and Length Based Visualizations](https://github.com/cxli233/FriendsDontLetFriends#9-friends-dont-let-friends-confuse-position-based-visualizations-with-length-based-visualizations) 
 10. [Friends Don't Let Friends Make Pie Charts](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart) 
+11. [Firends Don't Let Friends Make Concentric Donuts](https://github.com/cxli233/FriendsDontLetFriends#11-friends-dont-let-friends-make-concentric-donuts)
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -35,7 +36,7 @@ Means separation plots are some of the most common in scientific publications.
 We have two or more groups, which contains multiple observations; they may have different means, variances, and distributions. 
 The task of the visualization is to show the means and the spread (dispersion) of the data. 
 
-![No Bar Plots for Means Separation](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_bar_plot.png) 
+![No Bar Plots for Means Separation](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_bar_plot.svg) 
 
 In this example, two groups have similar means and standard deviations, but quite different distributions. **Are they really "the same"?**
 Just don't use bar plot for means separation, or at least check a couple things before settling down on a bar plot. 
@@ -47,7 +48,7 @@ Here is a pulication: [Weissgerber et al., 2015, PLOS Biology](https://journals.
 
 This is quite common in the literature as well, but unfortunately, violin plots (or any sort of smoothed distribution curves) make no sense for small n. 
 
-![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.png) 
+![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.svg) 
 
 Distributions and quartiles can vary widely with small n, even if the underlying observations are similar. 
 Distribution and quartiles are only meaningful with large n. 
@@ -59,7 +60,7 @@ The quartiles only stablize when n gets larger than 50.
 Excuse my language, but this is a truly data visualization sin, and again quite common. 
 I can understand why this error is common, because it appears that many of us have not spent a lot of thoughts on this issue. 
 
-![Are You Using the Right Color Scale for Your Data?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/ColorScales.png)
+![Are You Using the Right Color Scale for Your Data?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/ColorScales.svg)
 
 Color scales are pretty, but we have to be extra careful.
 When color scales (or color gradients) are used to represent numerical data, the darkest and lightest colors should have special meanings.
@@ -73,7 +74,7 @@ We talked about no bar charts for means separation, but this is a different issu
 It has to do with presenting results of a multi-factorial experiment. 
 Bar plot meadows are very common in scientific publications and unfortunately also *ineffective* in communicating the results. 
 
-![Horrendous Giant Bar Plot vs. Better Designed Plot](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/AvoidBarPlotMeadow.png)
+![Horrendous Giant Bar Plot vs. Better Designed Plot](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/AvoidBarPlotMeadow.svg)
 
 Data from: [Matand et al., 2020, BMC Plant Biology](https://link.springer.com/article/10.1186/s12870-020-2243-7)
 
@@ -89,7 +90,7 @@ However, if the focus is the effect of `Treatment` & `Variety` on `Response` at 
 Heatmaps are very common in scientific publications, and *very very* common in omics papers. 
 However, for heatmaps to be effective, we have to consider the ordering of rows & columns. 
 
-![A Heatmap before and after reordering rows and columns](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_rows_and_columns_for_heatmap.png?raw=true) 
+![A Heatmap before and after reordering rows and columns](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_rows_and_columns_for_heatmap.svg) 
 
 In this example, I have cells as columns and features as rows. Each grid is showing z scores. 
 It is impossible to get anything useful out of the heatmap without reordering rows and columns. 
@@ -105,7 +106,7 @@ Outliers in heatmap can really change how we perceive and interpret the visualiz
 This generalizes to all sort of visualizations that use colors to represent numeric data.
 Let me show you an example:
 
-![Did you check outliers](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_outliers_for_heatmap.png)
+![Did you check outliers](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_outliers_for_heatmap.svg)
 
 In this example, I have 2 observations. For each observations, I measured 20 features. 
 Without checking for outliers, it may appear that the 2 observations are overall similar, except at 2 features. 
@@ -116,7 +117,7 @@ However, after maxing out the color scale around 95th percentile of the data, it
 This is a common issue that many of us have encountered. 
 In a multifactor experiment, sometimes the range of the response variable changes widely between different factor levels. 
 
-![Did you check data range at each factor level](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_range_at_factor_level.png)
+![Did you check data range at each factor level](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_range_at_factor_level.svg)
 
 This hypothetical experiment measured 3 compounds across 2 groups (control vs. treatment). 
 Without checking data range for each compound, you will likely have missed that the treatment had a strong effect on compound 1.
@@ -127,7 +128,7 @@ This is because the concentration of compound 1 has a much narrower range than t
 Network graphs are common in scientific publications. They are super useful in presenting relationship data. 
 However, the apparence (not the topology) of the network can make a huge difference in determing if a network graph is effective. 
 
-![Try different network layouts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/TryDifferentLayouts.png) 
+![Try different network layouts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/TryDifferentLayouts.svg) 
 
 Layouts can drastically change the appearance of networks, making them easier or harder to interpret.
 Here are 3 network graphs from the same data. They look very different from each other.
@@ -139,7 +140,7 @@ This is always an elephant in the room and the essence of many misleading visual
 In this example, I measured a response variable across 3 time points. 
 Two of the following graphs are fine, but one of them is a data visualization crime. Can you see why? 
 
-![Position vs. length based visualizations](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Position_and_length_based_visualizations.png)
+![Position vs. length based visualizations](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Position_and_length_based_visualizations.svg)
 
 In dot and line plots, values are represented by positions along the x and y axis.
 The same idea applies to other position based visualizations, such as box plots. 
@@ -156,7 +157,7 @@ This is achieved by dividing a circle into sectors, and the sectors add up to a 
 Pie charts have been criticized, because human are much worse in reading angles and area than reading lengths. 
 Here is a [blog post](https://www.data-to-viz.com/caveat/pie.html) that explores that. 
 
-![Don't make pie charts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_pie_chart.png)
+![Don't make pie charts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_pie_chart.svg)
 
 In this example, we have two groups, each contains 4 sub-category. 
 In classic pie charts, the angles (and thus arc lengths & sector area) represent the data. 
@@ -167,6 +168,21 @@ In stacked bar graphs, bars are shown side-by-side and thus easier to compare ac
 
 Fun fact: the scripts underlying stacked bars are much simpler than those underlying the pie charts and donut charts.
 If you want to produce sub-optimal graph types with ggplot, you actually have to work extra hard.
+
+# 11. Friends Don't Let Friends Make Concentric Donuts
+
+In this example, we have 3 groups, each of which contains two sub-categories (Type I or Type II). 
+
+![Don't make concentric donuts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_concentric_donuts.svg)
+
+In concentric donuts, you might be tempted to say the data is represented by the arc length, which is in fact **inaccurate**. 
+The arc lengths on the outer rings are much longer than those in the inner rings. 
+Group 2 and Group 3 have the same exact values, but the arc lengths of Group 3 are much longer. 
+In fact the data is represented by the arc angle, which we are bad are reading. 
+Since outer rings are longer, the ordering of the groups (which group goes to which ring) has a big impact on the impression of the plot).
+It can lead to the apparent paradox where larger values have shorter arcs. 
+The better (and simplier!) alternative is just unwrap the donuts and make a good old stacked bar plot. 
+BTW, this is also my main issue with [circos plots](http://circos.ca/) and other circular plot layouts.
 
 # Conclusion (?)
 

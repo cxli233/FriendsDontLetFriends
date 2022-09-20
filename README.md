@@ -1,4 +1,8 @@
 # Friends Don't Let Friends Make Bad Graphs 
+
+Release v1.0.0. 
+[![DOI](https://zenodo.org/badge/495942174.svg)](https://zenodo.org/badge/latestdoi/495942174)
+
 Friends don't let friends make certain types of data visualization - What are they and why are they bad. 
 
   Author: Chenxin Li, postdoctoral associate at Center for Applied Genetic Technologies, University of Georgia. 

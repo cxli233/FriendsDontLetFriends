@@ -7,7 +7,7 @@ Friends don't let friends make certain types of data visualization - What are th
 
   Author: Chenxin Li, postdoctoral associate at Center for Applied Genetic Technologies, University of Georgia. 
 
-  Contact: [Chenxin.Li@uga.edu](Chenxin.Li@uga.edu)
+  Contact: [Chenxin.Li@uga.edu](Chenxin.Li@uga.edu) | [@ChenxinLi2](https://twitter.com/ChenxinLi2) 
 
 This is an *opinionated* essay about good and bad practices in data visualization. 
 Examples and explanations are below. 

@@ -108,7 +108,8 @@ Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/20
 
 ...if you are good are reordering rows/columns and choosing color gradients. 
 Here is an example "abstract aRt" generated from simulated data. 
-![aRt with Heatmap](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Abstract_R_2022_11_24.svg)
+![aRt with Heatmap](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Abstract_R_2022_11_24.svg)        
+
 
 R code for this aRt piece can be found [here](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Abstract_aRt.R). 
 

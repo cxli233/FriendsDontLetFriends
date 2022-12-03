@@ -112,5 +112,5 @@ wrap_plots(
   heights = c(1, 0.04)
 )
 
-ggsave("../Results/Abstract_R_2022_11_24.png", height = 2.5, width = 2.5, bg = "white")
-ggsave("../Results/Abstract_R_2022_11_24.svg", height = 2.5, width = 2.5, bg = "white")
+ggsave("../Results/Abstract_R_2022_11_24.png", height = 4, width = 4, bg = "white")
+ggsave("../Results/Abstract_R_2022_11_24.svg", height = 4, width = 4, bg = "white")

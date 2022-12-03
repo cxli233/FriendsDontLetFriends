@@ -104,6 +104,14 @@ But it is a very good idea to at least consider reordering rows and columns.
 
 Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/2022.07.04.498697v1) 
 
+## Bonus: heatmaps can be very pretty
+
+...if you are good are reordering rows/columns and choosing color gradients. 
+Here is an example "abstract aRt" generated from simulated data. 
+![aRt with Heatmap](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Abstract_R_2022_11_24.png)
+
+R code for this aRt piece can be found [here](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Abstract_aRt.R). 
+
 # 6. Friends Don't Let Friends Make Heatmap without Checking Outliers 
 
 Outliers in heatmap can really change how we perceive and interpret the visualization. 

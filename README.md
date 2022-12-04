@@ -163,6 +163,22 @@ The 3rd graph is not 0-based, which makes the bar length at time point 2 about 3
 In fact, the true difference in means is closer to 1.6x. 
 I hope you can see how confusing length and position based visualizations can lead to misleading graphs.   
 
+## Watch out for bar plots with broken axis 
+
+Broken axis may be useful for depicting data across a wide range of numeric values. 
+(Alternatively, log scaled axis can be used instead.) 
+Broken axis are fine for position based graphics, because the data is represented by positions along the axis. 
+However, we must be very careful with bar plots that have broken axis. Here is an example. 
+
+![Broken axis](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Broken_axis.svg) 
+
+In this example, two graphs (left vs. right) are showing the same data. 
+However, by changing where the axis is broken, one can make certain bars looks longer or shorter. 
+In this example, the length of bar "d" can look *really* different.
+The illusion of bar "d" being very short on the right graph boils down to bar plot being a length based graphics, not a position based graphics. 
+
+Example R code for broken axis can be found [here](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Broken_axis.R). 
+
 # 10. Friends Don't Let Friends Make Pie Chart 
 
 Pie chart is a common type of visualization for fractional data, where fractions add up to 100%. 

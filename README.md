@@ -1,7 +1,9 @@
 # Friends Don't Let Friends Make Bad Graphs 
 
-Release v1.0.0. 
-[![DOI](https://zenodo.org/badge/495942174.svg)](https://zenodo.org/badge/latestdoi/495942174)
+Release v2 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7420418.svg)](https://doi.org/10.5281/zenodo.7420418)
+
 
 Friends don't let friends make certain types of data visualization - What are they and why are they bad. 
 

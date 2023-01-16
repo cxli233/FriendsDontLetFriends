@@ -7,9 +7,8 @@ Release v2
 
 Friends don't let friends make certain types of data visualization - What are they and why are they bad. 
 
-  Author: Chenxin Li, postdoctoral associate at Center for Applied Genetic Technologies, University of Georgia. 
-
-  Contact: [Chenxin.Li@uga.edu](Chenxin.Li@uga.edu) | [@ChenxinLi2](https://twitter.com/ChenxinLi2) 
+* Author: Chenxin Li, postdoctoral associate at Center for Applied Genetic Technologies, University of Georgia. 
+* Contact: [Chenxin.Li@uga.edu](Chenxin.Li@uga.edu) | [@ChenxinLi2](https://twitter.com/ChenxinLi2) 
 
 This is an *opinionated* essay about good and bad practices in data visualization. 
 Examples and explanations are below. 
@@ -19,7 +18,7 @@ It requires R, RStudio, and the rmarkdown package.
 
 * R: [R Download](https://cran.r-project.org/bin/)
 * RStudio: [RStudio Download](https://www.rstudio.com/products/rstudio/download/)
-* rmarkdown can be installed using the intall packages interface in RStudio
+* rmarkdown can be installed using the install packages interface in RStudio
 
 # Table of contents
 
@@ -76,7 +75,7 @@ A data visualization sin for heat maps/color gradients is when the lightest or d
 
 # 4. Friends Don't Let Friends Make Bar Plot Meadow 
 
-We talked about no bar charts for means separation, but this is a different issue. 
+We talked about no bar charts for mean separation, but this is a different issue. 
 It has to do with presenting results of a multi-factorial experiment. 
 Bar plot meadows are very common in scientific publications and unfortunately also *ineffective* in communicating the results. 
 
@@ -85,7 +84,7 @@ Bar plot meadows are very common in scientific publications and unfortunately al
 Data from: [Matand et al., 2020, BMC Plant Biology](https://link.springer.com/article/10.1186/s12870-020-2243-7)
 
 Bar plot meadows are common because multi-factorial experiments are common. 
-However, bar plot meadows are poorly designed for its purpose. 
+However, a bar plot meadow is poorly designed for its purpose. 
 To communicate results of a multi-factorial experiment, it requires thoughtful designs regarding grouping/faceting by factors of interest.
 
 In this example, I focus on comparing the effect of `Treatment` & `Explant` on `Response` at the level of each `Variety`. 
@@ -98,7 +97,7 @@ However, for heatmaps to be effective, we have to consider the ordering of rows 
 
 ![A Heatmap before and after reordering rows and columns](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_rows_and_columns_for_heatmap.png) 
 
-In this example, I have cells as columns and features as rows. Each grid is showing z scores. 
+In this example, I have cells as columns and features as rows. Grids are showing z scores. 
 It is impossible to get anything useful out of the heatmap without reordering rows and columns. 
 We can reorder rows and columns using clustering, but that is not the only way. 
 Of course, if the rows and columns are mapping to physical entities (rows and columns of a 96-well plate), then you can't reorder them. 
@@ -151,7 +150,7 @@ Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/20
 
 # 9. Friends Don't Let Friends Confuse Position-based Visualizations with Length-based Visualizations 
 
-This is always an elephant in the room and the essence of many misleading visualizations. 
+This is always the elephant in the room and the essence of many misleading visualizations. 
 In this example, I measured a response variable across 3 time points. 
 Two of the following graphs are fine, but one of them is a data visualization crime. Can you see why? 
 
@@ -169,7 +168,7 @@ I hope you can see how confusing length and position based visualizations can le
 
 Broken axis may be useful for depicting data across a wide range of numeric values. 
 (Alternatively, log scaled axis can be used instead.) 
-Broken axis are fine for position based graphics, because the data is represented by positions along the axis. 
+Broken axis are fine for position based graphics, because the data are represented by positions along the axis. 
 However, we must be very careful with bar plots that have broken axis. Here is an example. 
 
 ![Broken axis](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Broken_axis.svg) 
@@ -190,7 +189,7 @@ Here is a [blog post](https://www.data-to-viz.com/caveat/pie.html) that explores
 
 ![Don't make pie charts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_pie_chart.svg)
 
-In this example, we have two groups, each contains 4 sub-category. 
+In this example, we have two groups, each contains 4 sub-categories. 
 In classic pie charts, the angles (and thus arc lengths & sector area) represent the data. 
 The problem is that it is *very* difficult to compare between groups. 
 We can visually simplify the pie chart into donut charts, where the data are now represented by arc lengths. 
@@ -206,15 +205,26 @@ In this example, we have 3 groups, each of which contains two sub-categories (Ty
 
 ![Don't make concentric donuts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_concentric_donuts.svg)
 
-In concentric donuts, you might be tempted to say the data is represented by the arc length, which is in fact **inaccurate**. 
+In concentric donuts, you might be tempted to say the data are represented by the arc lengths, which is in fact **inaccurate**. 
 The arc lengths on the outer rings are much longer than those in the inner rings. 
 Group 2 and Group 3 have the same exact values, but the arc lengths of Group 3 are much longer. 
-In fact the data is represented by the *arc angle*, which we are bad at reading. 
+In fact the data are represented by the *arc angles*, which we are bad at reading. 
 
 Since outer rings are longer, the ordering of the groups (which group goes to which ring) has a big impact on the impression of the plot.
 It can lead to the apparent paradox where larger values have shorter arcs. 
-The better (and simplier!) alternative is just unwrap the donuts and make a good old stacked bar plot. 
+The better (and simpler!) alternative is just unwrap the donuts and make a good old stacked bar plot. 
 BTW, this is also my main issue with [circos plots](http://circos.ca/) and other circular plot layouts.
+
+# 12. Friends Don't Let Friends Use Red/Green and Rainbow color scales
+
+![are you making a "safe" heatmap?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Color_blind_grey_scale_safe_heatmap.svg)
+
+Deuteranomaly is the most common type of red/green colorblindness, occurring in 1/16 male and 1/256 female. 
+Any color scales that use shades of red and shades of green in the same time would be a problem for a person with red/green colorblindness (third column of the figure). 
+In addition, red/green and rainbow do not preserve information well at all when printed on black/white (grey scale, second column in figure). 
+Many scientific software still use red/green or rainbow as the default color scales, which drives me crazy. 
+More "modern" color scales, such as [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html) are both colorblind-friendly and grey scale-safe (third row of figure). 
+And they look nice too. 
 
 # Conclusion (?)
 

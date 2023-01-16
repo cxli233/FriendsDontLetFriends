@@ -1,0 +1,209 @@
+---
+title: "RedGreen"
+author: "Chenxin Li"
+date: "2023-01-16"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Friends don't let friends use red/green or rainbow for heatmaps! 
+Deuteranomaly is the most common type of red/green colorblindness, occurring in 1/16 male and 1/256 female. 
+Any color scales that uses shades of red and shades of green in the same time would be a problem for a person with red/green colorblindness (third column of figure). 
+In addition, red/green and rainbow do not preserve information well at all when printed on black/white (grey scale, second column in figure). 
+Many scientific software still use red/green or rainbow as the default color scales, which drives me crazy. 
+More "modern" color scales, such as [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html) are both colorblind-friendly and grey scale-safe (third row of figure). 
+And they look nice too. 
+
+
+
+# Package
+```{r}
+library(tidyverse)
+library(viridis)
+library(prismatic)
+library(patchwork)
+```
+
+# Data
+```{r}
+abc_1 <- expand.grid(
+  a = c(1:10),
+  b = c(1:10)
+) %>% 
+  mutate(c = a + b)
+
+head(abc_1)
+```
+## Write a function to make grey scale 
+```{r}
+to_grey_scale <- function(hex){
+  temp = col2rgb(hex) %>% 
+    t() %>% 
+    as.data.frame() %>% 
+    mutate(gs = 0.299*red + 0.587*green + 0.114*blue)
+  
+  rgb(temp$gs, temp$gs, temp$gs, maxColorValue = 256)
+}
+```
+
+
+# Red/green
+```{r}
+Red_green <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradient2(low = "red", mid = "white", high = "green", midpoint = 11) +
+  labs(title = "c = a + b\nred/green\nnormal") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+Red_green
+```
+## Grey scale
+```{r}
+Red_green_gs <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradient2(low = to_grey_scale("red"), 
+                       mid = "white", 
+                       high = to_grey_scale("green"), midpoint = 11) +
+  labs(title = "c = a + b\nred/green\ngrey scale") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+Red_green_gs
+```
+
+## Red/green colorblind
+```{r}
+Red_green_deu <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradient2(low = clr_deutan("red"), 
+                       mid = clr_deutan("white"), 
+                       high = clr_deutan("green"), midpoint = 11) +
+  labs(title = "c = a + b\nred/green\ndeuteranopia") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+Red_green_deu
+```
+
+
+# Rainbow
+```{r}
+Rainbow1 <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradientn(colors = rainbow(20)) +
+  labs(title = "c = a + b\nrainbow\nnormal") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+Rainbow1
+```
+## grey scale
+```{r}
+Rainbow_gs <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradientn(colors = rainbow(20) %>% to_grey_scale()) +
+  labs(title = "c = a + b\nrainbow\ngrey scale") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+Rainbow_gs
+```
+## Red/green color blind
+```{r}
+Rainbow_deu <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradientn(colors = rainbow(20) %>% clr_deutan()) +
+  labs(title = "c = a + b\nrainbow\ndeuteranopia") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+Rainbow_deu
+```
+
+
+# Viridis 
+## Normal 
+```{r}
+viridis_optionD <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradientn(colors = viridis(100)) +
+  labs(title = "c = a + b\nviridis\nnormal") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black")) +
+  coord_fixed()
+
+viridis_optionD
+```
+## Grey scale
+```{r}
+viridis_gs <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradientn(colors = to_grey_scale(viridis(100))) +
+  labs(title = "c = a + b\nviridis\ngrey scale") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black")) +
+  coord_fixed()
+
+viridis_gs
+```
+## Red/green color blind
+```{r}
+viridis_deu <- abc_1 %>% 
+  ggplot(aes(x = a, y = b)) +
+  geom_tile(aes(fill = c)) +
+  scale_fill_gradientn(colors = clr_deutan(viridis(100))) +
+  labs(title = "c = a + b\nviridis\ndeuteranopia") +
+  theme_classic() +
+  theme(legend.key.width = unit(0.7, "lines"),
+        axis.text = element_text(color = "black"),
+        ) +
+  coord_fixed()
+
+viridis_deu
+```
+# Put in together: 
+```{r}
+wrap_plots(
+  Red_green, Red_green_gs, Red_green_deu,
+  Rainbow1, Rainbow_gs, Rainbow_deu,
+  viridis_optionD, viridis_gs, viridis_deu,
+  nrow = 3, 
+  ncol = 3
+)
+
+ggsave("../Results/Color_blind_grey_scale_safe_heatmap.svg", width = 10, height = 7, bg = "white")
+ggsave("../Results/Color_blind_grey_scale_safe_heatmap.png", width = 10, height = 7, bg = "white")
+```
+

@@ -153,7 +153,9 @@ my_data_reordered <- my_data %>%
   mutate(col = reorder(col, -n)) %>%  # this reorders the columns
   select(-n) %>% 
   inner_join(my_data_peak_values_reordered, by = "row") %>% 
-  mutate(row = reorder(row, n)) # this reorders the rows
+  mutate(peaked_at = reorder(peaked_at, n)) %>% 
+  mutate(order_rows = as.numeric(peaked_at)) %>% 
+  mutate(row = reorder(row, order_rows)) # this reorders the rows by the "peaked_at" column. 
   
 
 head(my_data_reordered)

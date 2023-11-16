@@ -114,6 +114,8 @@ Here is an example "abstract aRt" generated from simulated data.
 
 R code for this aRt piece can be found [here](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Abstract_aRt.R). 
 
+For a tutorial on how to reorder rows and columns of a heatmap, see this [markdown file](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Heatmap_tutorial.md). 
+
 # 6. Friends Don't Let Friends Make Heatmap without Checking Outliers 
 
 Outliers in heatmap can really change how we perceive and interpret the visualization. 

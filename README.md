@@ -33,7 +33,7 @@ It requires R, RStudio, and the rmarkdown package.
 10. [Friends Don't Let Friends Make Pie Charts](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart) 
 11. [Friends Don't Let Friends Make Concentric Donuts](https://github.com/cxli233/FriendsDontLetFriends#11-friends-dont-let-friends-make-concentric-donuts)
 12. [Friends Don't Let Friends Use Red/green and Rainbow for Color Scales](https://github.com/cxli233/FriendsDontLetFriends#12-friends-dont-let-friends-use-redgreen-and-rainbow-color-scales)
-13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot]()
+13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot](https://github.com/cxli233/FriendsDontLetFriends/tree/main#13-friends-dont-let-friends-forget-to-reorder-stacked-bar-plot)
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -236,7 +236,7 @@ This kind of visualization boils down to a collection of samples, where each sam
 However, when we have many samples and many classes, stacked bar plots need to be optimized to be effective. 
 And by "optimize" I mean the grouping and ordering of samples. 
 
-![Reorder your stacked bars](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_stacked_bars.svg)
+![Reorder your stacked bars](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_stacked_bars.png)
 
 Here we have an example data with 100 samples and 8 classes of member. 
 Due to the number of samples and classes, it is very hard to discern anything from this graph without optimizing the order of bars. What the heck am I looking at? 

@@ -32,7 +32,8 @@ It requires R, RStudio, and the rmarkdown package.
 9. [Friends Don't Let Friends Confuse Position and Length Based Visualizations](https://github.com/cxli233/FriendsDontLetFriends#9-friends-dont-let-friends-confuse-position-based-visualizations-with-length-based-visualizations) 
 10. [Friends Don't Let Friends Make Pie Charts](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart) 
 11. [Friends Don't Let Friends Make Concentric Donuts](https://github.com/cxli233/FriendsDontLetFriends#11-friends-dont-let-friends-make-concentric-donuts)
-12. [Friends Don't Let Friends Use Red/green and Rainbow for Color Scales](https://github.com/cxli233/FriendsDontLetFriends#12-friends-dont-let-friends-use-redgreen-and-rainbow-color-scales) 
+12. [Friends Don't Let Friends Use Red/green and Rainbow for Color Scales](https://github.com/cxli233/FriendsDontLetFriends#12-friends-dont-let-friends-use-redgreen-and-rainbow-color-scales)
+13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot]()
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -227,6 +228,20 @@ In addition, red/green and rainbow do not preserve information well at all when 
 Many scientific software still use red/green or rainbow as the default color scales, which drives me crazy. 
 More "modern" color scales, such as [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html) are both colorblind-friendly and grey scale-safe (third row of figure). 
 And they look nice too. 
+
+# 13. Friends Don't Let Friends Forget to Reorder Stacked Bar Plot
+Stacked bar plots are useful for visualizing proportion data. 
+Stacked bar plots are commonly used to visualize community structure or population structure or admixture analysis. 
+This kind of visualization boils down to a collection of samples, where each sample contains multiple classes of members. 
+However, when we have many samples and many classes, stacked bar plots need to be optimized to be effective. 
+And by "optimize" I mean the grouping and ordering of samples. 
+
+![Reorder your stacked bars](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_stacked_bars.svg)
+
+Here we have an example data with 100 samples and 8 classes of member. 
+Due to the number of samples and classes, it is very hard to discern anything from this graph without optimizing the order of bars. What the heck am I looking at? 
+After reordering the the bars, __wow__, that really made a difference, don't you think? 
+For a tutorial on how to optimize a stack bar plot, see [this script](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/stacked_bars_optimization.Rmd).
 
 # Conclusion (?)
 

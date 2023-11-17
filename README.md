@@ -240,7 +240,7 @@ And by "optimize" I mean the grouping and ordering of samples.
 
 Here we have an example data with 100 samples and 8 classes of member. 
 Due to the number of samples and classes, it is very hard to discern anything from this graph without optimizing the order of bars. What the heck am I looking at? 
-After reordering the the bars, __wow__, that really made a difference, don't you think? 
+After reordering the bars, __wow__, that really made a difference, don't you think? 
 For a tutorial on how to optimize a stack bar plot, see [this script](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/stacked_bars_optimization.Rmd).
 
 # Conclusion (?)

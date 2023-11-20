@@ -48,7 +48,7 @@ In this example, two groups have similar means and standard deviations, but quit
 Just don't use bar plot for means separation, or at least check a couple things before settling down on a bar plot. 
 
 It's worth mentioning that I was inspired by many researchers who have tweeted on the limitation of bar graphs. 
-Here is a pulication: [Weissgerber et al., 2015, PLOS Biology](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002128). 
+Here is a publication: [Weissgerber et al., 2015, PLOS Biology](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002128). 
 
 # 2. Friends Don't Let Friends Make Violin Plots for Small Sample Sizes 
 

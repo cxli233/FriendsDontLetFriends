@@ -59,7 +59,7 @@
 <rect x='108.44' y='33.74' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #386CB0; fill-opacity: 0.80;' />
 <text x='70.29' y='45.68' style='font-size: 11.20px; font-family: "Arial";' textLength='30.47px' lengthAdjust='spacingAndGlyphs'>Type I</text>
 <text x='131.99' y='45.68' style='font-size: 11.20px; font-family: "Arial";' textLength='33.58px' lengthAdjust='spacingAndGlyphs'>Type II</text>
-<text x='13.70' y='19.56' style='font-size: 12.00px; font-family: "Arial";' textLength='141.42px' lengthAdjust='spacingAndGlyphs'>Arc lenghts are misleading</text>
+<text x='13.70' y='19.56' style='font-size: 12.00px; font-family: "Arial";' textLength='141.42px' lengthAdjust='spacingAndGlyphs'>Arc lengths are misleading</text>
 <text x='13.70' y='274.69' style='font-size: 11.20px; font-family: "Arial";' textLength='153.92px' lengthAdjust='spacingAndGlyphs'>Outer rings = much longer arcs</text>
 </g>
 <defs>

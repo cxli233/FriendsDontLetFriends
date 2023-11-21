@@ -56,7 +56,7 @@ Violin plots don't help your reader to understand the data. The whole justificat
 
 ![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.png) 
 
-- If your data is multimodal or has an intersting distribution use a histogram or multiple stacked histograms.
+- If your data is multimodal or has an interesting distribution, use a histogram or multiple stacked histograms.
 - If your data is not multimodal and you want to show averages and quartiles, just use a box plot.
 
 ![Violin Plots should not exist](https://youtu.be/_0QMKFzW9fw?si=o18kDWN5qSeaNfXV)

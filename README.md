@@ -22,7 +22,7 @@ It requires R, RStudio, and the rmarkdown package.
 # Table of contents
 
 1. [Friends Don't Let Friends Make Bar Plots For Mean Separation](https://github.com/cxli233/FriendsDontLetFriends#1-friends-dont-let-friends-make-bar-plots-for-means-separation)
-2. [Friends Don't Let Friends Make Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes)
+2. [Friends Don't Let Friends Make Violin Plots](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots)
 3. [Friends Don't Let Friends Use Bidirectional Color Scales for Unidirectional Data](https://github.com/cxli233/FriendsDontLetFriends#3-friends-dont-let-friends-use-bidirectional-color-scales-for-unidirectional-data)
 4. [Friends Don't Let Friends Make Bar Plot Meadow](https://github.com/cxli233/FriendsDontLetFriends#4-friends-dont-let-friends-make-bar-plot-meadow)
 5. [Friends Don't Let Friends Make Heatmap without Reordering Rows & Columns](https://github.com/cxli233/FriendsDontLetFriends#5-friends-dont-let-friends-make-heatmap-without-considering-reordering-rows--columns)
@@ -50,16 +50,16 @@ Just don't use bar plot for means separation, or at least check a couple things 
 It's worth mentioning that I was inspired by many researchers who have tweeted on the limitation of bar graphs. 
 Here is a pulication: [Weissgerber et al., 2015, PLOS Biology](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002128). 
 
-# 2. Friends Don't Let Friends Make Violin Plots for Small Sample Sizes 
+# 2. Friends Don't Let Friends Make Violin Plots 
 
-This is quite common in the literature as well, but unfortunately, violin plots (or any sort of smoothed distribution curves) make no sense for small n. 
+Violin plots don't help your reader to understand the data. The whole justification is that regular box plots may misrepresent multimodel data distributions, so you want to show the data. But violin plots don't have units and tick marks that allow people to actually read the data and compare the distributions. Also the selection of the probability density function for the smoothing is almost never explained, and may even be completely misleading with small datasets.
 
 ![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.png) 
 
-Distributions and quartiles can vary widely with small n, even if the underlying observations are similar. 
-Distribution and quartiles are only meaningful with large n. 
-I did an experiment before, where I sampled the *same* normal distribution several times and computed the quartiles for each sample.
-The quartiles only stablize when n gets larger than 50. 
+- If your data is multimodal or has an intersting distribution use a histogram or multiple stacked histograms.
+- If your data is not multimodal and you want to show averages and quartiles, just use a box plot.
+
+![Violin Plots should not exist](https://youtu.be/_0QMKFzW9fw?si=o18kDWN5qSeaNfXV)
 
 # 3. Friends Don't Let Friends Use Bidirectional Color Scales for Unidirectional Data 
 

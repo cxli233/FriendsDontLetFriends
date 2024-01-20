@@ -1,0 +1,271 @@
+---
+title: "Stacked_bar_and_mean_sep"
+author: "Chenxin Li"
+date: "2024-01-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+```{r}
+library(tidyverse) 
+
+library(emmeans) # for linear model 
+library(RColorBrewer) # for the colors 
+library(rcartocolor) # for the colors 
+library(patchwork) # for putting graphs together
+```
+
+# Data 
+```{r}
+# Simulate some data 
+set.seed(666)
+
+control_1 <- rnorm(n = 5, mean = 30, sd = 5) 
+control_2 <- rnorm(n = 5, mean = 50, sd = 5)
+control_3 <- rnorm(n = 5, mean = 20, sd = 5) 
+
+total_mean <- 100
+adjustment_ctrl <- total_mean / sum(c(mean(control_1), mean(control_2), mean(control_3)))
+control_1 <- control_1 * adjustment_ctrl
+control_2 <- control_2 * adjustment_ctrl
+control_3 <- control_3 * adjustment_ctrl
+
+trt_1 <- rnorm(n = 5, mean = 10, sd = 5)
+trt_2 <- rnorm(n = 5, mean = 30, sd = 5)
+trt_3 <- rnorm(n = 5, mean = 60, sd = 5)
+
+adjustment_trt <- total_mean / sum(c(mean(trt_1), mean(trt_2), mean(trt_3)))
+trt_1 <- trt_1 * adjustment_trt
+trt_2 <- trt_2 * adjustment_trt
+trt_3 <- trt_3 * adjustment_trt
+```
+
+Let's say in this hypothetical experiment, we had blueberry plants in two groups.
+One group was the control; the other was treated with a chemical to make fruit development faster.  
+Each group had 5 plants. 
+The response of the treatment was divided into 3 categories: 
+1) light green fruits, 2) light blue fruits, and 3) dark blue fruits. 
+100 fruits from each plant were examined and the number of fruits in each category was counted. 
+The percentage of fruits in each category was calculated and reported. 
+The question of the study is: did the chemical treatment work? 
+
+## Data wrangling 
+```{r}
+my_data <- rbind(
+  control_1 %>% 
+  as.data.frame() %>% 
+  mutate(group = "ctrl") %>% 
+  mutate(category = "light green"), 
+  
+  control_2 %>% 
+  as.data.frame() %>% 
+  mutate(group = "ctrl") %>% 
+  mutate(category = "light blue"),
+  
+  control_3 %>% 
+  as.data.frame() %>% 
+  mutate(group = "ctrl") %>% 
+  mutate(category = "dark blue"),
+  
+  trt_1 %>% 
+  as.data.frame() %>% 
+  mutate(group = "trt") %>% 
+  mutate(category = "light green"), 
+  
+  trt_2 %>% 
+  as.data.frame() %>% 
+  mutate(group = "trt") %>% 
+  mutate(category = "light blue"),
+  
+  trt_3 %>% 
+  as.data.frame() %>% 
+  mutate(group = "trt") %>% 
+  mutate(category = "dark blue")
+  ) %>% 
+  rename(percent_of_fruit = ".")
+
+head(my_data)
+```
+
+# Stats
+## Summary stats 
+```{r}
+my_data_s <- my_data %>% 
+  group_by(group, category) %>% 
+  summarise(mean_percentage = mean(percent_of_fruit),
+            sd_percentage = sd(percent_of_fruit),
+            N = n()) %>% 
+  ungroup()
+
+head(my_data_s)
+```
+## Linear models 
+```{r}
+my_model1 <- lm(percent_of_fruit ~ group * category, data = my_data)
+anova(my_model1)
+```
+```{r}
+my_estimates <- emmeans(my_model1, pairwise ~ group | category)
+my_contrasts <- my_estimates$contrasts %>% 
+  as.data.frame() %>% 
+  mutate(txt_y = case_when(
+                category == "light green" ~ 45,
+                category == "light blue" ~ 55,
+                category == "dark blue" ~ 35
+              ))
+
+my_contrasts
+```
+
+
+
+
+
+# Graphs 
+## Stacked bar for 
+```{r}
+stacked_bar_plot <-my_data_s %>% 
+  ggplot(aes(x = group, y = mean_percentage)) +
+  geom_bar(stat = "identity", aes(fill = category), 
+           width = 0.7, color = "white", alpha = 0.8) +
+  scale_y_continuous(breaks = c(0, 50, 100)) +
+  scale_fill_manual(values = c(
+    carto_pal(7, "BluYl")[2], 
+    carto_pal(7, "Purp")[2],
+    carto_pal(7, "Sunset")[c(7)]
+  ), limits = c("light green", "light blue", "dark blue")) +
+  labs(x = "group",
+       y = "% of fruits",
+       fill = "fruit color", 
+       caption = "This is fine.") +
+  theme_classic() +
+  theme(
+    plot.caption = element_text(hjust = 0)
+  )
+
+stacked_bar_plot
+```
+
+
+## Graph, the wrong way 
+```{r}
+stacked_bar_plot_bad <- my_data %>% 
+  mutate(off_set = case_when(
+    group == "ctrl" & 
+      category == "light green" ~ 0,
+    group == "ctrl" & 
+      category == "light blue" ~ as.numeric(my_data_s[3, 3]),
+    group == "ctrl" & 
+      category == "dark blue" ~ as.numeric(my_data_s[3, 3] + my_data_s[2, 3]),
+    group == "trt" & 
+      category == "light green" ~ 0,
+    group == "trt" & 
+      category == "light blue" ~ as.numeric(my_data_s[6, 3]),
+    group == "trt" & 
+      category == "dark blue" ~ as.numeric(my_data_s[6, 3] + my_data_s[5, 3])
+  )) %>% 
+  mutate(percent_of_fruit_offset = percent_of_fruit + off_set) %>% 
+  ggplot(aes(x = group, y = percent_of_fruit_offset)) +
+  geom_bar(data = my_data %>% 
+  group_by(group, category) %>% 
+  summarise(mean_percentage = mean(percent_of_fruit)) %>% 
+  ungroup(),
+  stat = "identity", aes(fill = category, y = mean_percentage),
+           width = 0.7, color = "white", alpha = 0.8) +
+  geom_point(fill = "grey90", size = 2, shape = 21, color = "grey20",
+             position = position_jitter(width = 0.1, seed = 666)) +
+  stat_summary(fun.data = mean_se, geom = "linerange", 
+               aes(group = category), size = 1) +
+  scale_y_continuous(breaks = c(0, 50, 100)) +
+  scale_fill_manual(values = c(
+    carto_pal(7, "BluYl")[2],
+    carto_pal(7, "Purp")[2],
+    carto_pal(7, "Sunset")[c(7)]
+  ), limits = c("light green", "light blue", "dark blue")) +
+  labs(x = "group",
+       y = "% of fruits",
+       fill = "fruit color",
+       caption = "What am I comparing?\nSome dots are above 100%?") +
+  theme_classic() +
+  theme(
+    plot.caption = element_text(hjust = 0)
+  )
+
+stacked_bar_plot_bad
+```
+
+## Mean separation plot, the better way 
+```{r}
+jitter_plot <- my_data %>% 
+  mutate(category = factor(category, levels = c(
+    "light green", "light blue", "dark blue"
+  ))) %>% 
+  ggplot(aes(x = group, y = percent_of_fruit)) +
+  facet_grid(.~ category, scales = "free_y") +
+  geom_point(aes(fill = category), color = "grey30", size = 2, alpha = 0.8,
+             shape = 21, position = position_jitter(width = 0.1, seed = 666)) +
+  stat_summary(fun.data = mean_se, geom = "linerange", 
+               aes(group = category), size = 1) +
+  geom_segment(data = my_contrasts, aes(y = txt_y, yend = txt_y),
+               x = 1.2, xend = 1.8) + 
+  geom_text(data = my_contrasts, vjust = -0.25, x = 1.5,
+            size = 3, 
+            aes(label = paste0(
+              "p = ", signif(p.value, 2)
+            ),
+            y = txt_y)) +
+  scale_fill_manual(values = c(
+    carto_pal(7, "BluYl")[2],
+    carto_pal(7, "Purp")[2],
+    carto_pal(7, "Sunset")[c(7)]
+  ), limits = c("light green", "light blue", "dark blue")) +
+  labs(x = "group",
+       y = "% of fruits",
+       fill = "fruit color",
+       caption = "The better way for mean separation.") +
+  guides(fill = "none") +
+  theme_classic() +
+  theme(
+    plot.caption = element_text(hjust = 0),
+    panel.spacing = unit(0.6, "lines"),
+    strip.text = element_blank(),
+    strip.background = element_blank()
+  )
+
+jitter_plot
+```
+## wrap plots together 
+```{r}
+wrap_plots(
+  stacked_bar_plot, stacked_bar_plot_bad, jitter_plot, 
+  ncol = 3, guides = "collect", 
+  widths = c(0.6, 0.6, 1)
+) & 
+  theme(legend.position = "top")
+
+ggsave("../Results/stacked_bar_vs_jitter.svg", height = 4, width = 8, bg = "white")
+ggsave("../Results/stacked_bar_vs_jitter.png", height = 4, width = 8, bg = "white")
+```
+The first stacked bar plot is fine as the standard way to visualize proportion data. 
+It is clear that all categories add up to 100%, 
+and the chemical treatment strongly shifted the color profile towards the most developed stage (dark blue). 
+
+The middle stacked bar plot is problematic, 
+mainly because it is trying to do two distinct data visualization tasks at once. 
+When error bars and dots are overlaid onto the stacked bars, 
+it become unclear which error bars and dots are being compared. 
+Due to the nature of stacked bars, the error bars and dots of the upper stacks have to be shifted upwards,
+and thus interpretation of the y-axis for error bars and dots become not straightforward. 
+
+Finally, if the main point of the visualization is mean separation and dispersion around the mean, 
+the third graph is the better choice. 
+There is no ambiguity on which comparisons are being made.
+As shown in the first stacked bar plot, 
+the chemical treatment strongly increases the proportion of dark blue fruits, 
+at the expense of lighter color fruits. 
+
+

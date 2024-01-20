@@ -34,6 +34,7 @@ It requires R, RStudio, and the rmarkdown package.
 11. [Friends Don't Let Friends Make Concentric Donuts](https://github.com/cxli233/FriendsDontLetFriends#11-friends-dont-let-friends-make-concentric-donuts)
 12. [Friends Don't Let Friends Use Red/green and Rainbow for Color Scales](https://github.com/cxli233/FriendsDontLetFriends#12-friends-dont-let-friends-use-redgreen-and-rainbow-color-scales)
 13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot](https://github.com/cxli233/FriendsDontLetFriends/tree/main#13-friends-dont-let-friends-forget-to-reorder-stacked-bar-plot)
+14. [Friends Don't Let Friends Mix Stacked Bars and Mean separation](https://github.com/cxli233/FriendsDontLetFriends/tree/main#14-friends-dont-let-friends-mix-stacked-bars-and-mean-separation)
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -48,7 +49,7 @@ In this example, two groups have similar means and standard deviations, but quit
 Just don't use bar plot for means separation, or at least check a couple things before settling down on a bar plot. 
 
 It's worth mentioning that I was inspired by many researchers who have tweeted on the limitation of bar graphs. 
-Here is a pulication: [Weissgerber et al., 2015, PLOS Biology](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002128). 
+Here is a publication: [Weissgerber et al., 2015, PLOS Biology](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002128). 
 
 # 2. Friends Don't Let Friends Make Violin Plots for Small Sample Sizes 
 
@@ -71,7 +72,7 @@ I can understand why this error is common, because it appears that many of us ha
 Color scales are pretty, but we have to be extra careful.
 When color scales (or color gradients) are used to represent numerical data, the darkest and lightest colors should have special meanings.
 You can decide what those special meanings are: e.g., max, min, mean, zero. But they should represent something meaningful. 
-A data visualization sin for heat maps/color gradients is when the lightest or darkers colors are some arbitrary numbers. 
+A data visualization sin for heat maps/color gradients is when the lightest or darkest colors are some arbitrary numbers. 
 *This is as bad as the longest bar in a bar chart not being the largest value.* Can you imagine that?  
 
 # 4. Friends Don't Let Friends Make Bar Plot Meadow 
@@ -143,7 +144,7 @@ This is because the concentration of compound 1 has a much narrower range than t
 # 8. Friends Don't Let Friends Make Network Graphs without Trying Different Layouts
 
 Network graphs are common in scientific publications. They are super useful in presenting relationship data. 
-However, the apparence (not the topology) of the network can make a huge difference in determing if a network graph is effective. 
+However, the appearance (not the topology) of the network can make a huge difference in determining if a network graph is effective. 
 
 ![Try different network layouts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/TryDifferentLayouts.svg) 
 
@@ -242,6 +243,40 @@ Here we have an example data with 100 samples and 8 classes of member.
 Due to the number of samples and classes, it is very hard to discern anything from this graph without optimizing the order of bars. What the heck am I looking at? 
 After reordering the bars, __wow__, that really made a difference, don't you think? 
 For a tutorial on how to optimize a stack bar plot, see [this script](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/stacked_bars_optimization.Rmd).
+
+# 14. Friends Don't Let Friends Mix Stacked Bars and Mean separation
+Sometimes a visualization gets confusing and ineffective when it tries to too many things at once. 
+One such example is mixing stacked bar plots and mean separation plots. 
+One displays proportional data adding up to 100%, the other displays the difference in means and dispersion around means. 
+These are very distinct tasks in data visualization. 
+
+In this hypothetical experiment, we had blueberry plants assigned to two groups.
+One group was the control; the other was treated with a chemical to make fruit development faster. 
+Each group had 5 plants. The response of the treatment was divided into 3 categories: 
+light green fruits, light blue fruits, and dark blue fruits. 
+100 fruits from each plant were examined and the number of fruits in each category was counted. 
+The percentage of fruits in each category was calculated and reported. 
+The question of the study is: did the chemical treatment work? 
+
+![Don't mix stacked bar plots with mean separation plots](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/stacked_bar_vs_jitter.png) 
+
+The first stacked bar plot is fine as the standard way to visualize proportion data. 
+It is clear that all categories add up to 100%, 
+and the chemical treatment strongly shifted the color profile towards the most developed stage (dark blue). 
+
+The middle stacked bar plot is problematic, 
+mainly because it is trying to do two distinct data visualization tasks at once. 
+When error bars and dots are overlaid onto the stacked bars, 
+it become unclear which error bars and dots are being compared. 
+Due to the nature of stacked bars, the error bars and dots of the upper stacks have to be shifted upwards,
+and thus interpretation of the y-axis for error bars and dots become not straightforward. 
+
+Finally, if the main point of the visualization is mean separation and dispersion around the mean, 
+the third graph is the better choice. 
+There is no ambiguity on which comparisons are being made.
+As shown in the first stacked bar plot, 
+the chemical treatment strongly increases the proportion of dark blue fruits, 
+at the expense of lighter color fruits. 
 
 # Conclusion (?)
 

@@ -245,7 +245,7 @@ After reordering the bars, __wow__, that really made a difference, don't you thi
 For a tutorial on how to optimize a stack bar plot, see [this script](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/stacked_bars_optimization.Rmd).
 
 # 14. Friends Don't Let Friends Mix Stacked Bars and Mean separation
-Sometimes a visualization gets confusing and ineffective when it tries to too many things at once. 
+Sometimes a visualization gets confusing and ineffective when it tries to do too many things at once. 
 One such example is mixing stacked bar plots and mean separation plots. 
 One displays proportional data adding up to 100%, the other displays the difference in means and dispersion around means. 
 These are very distinct tasks in data visualization. 

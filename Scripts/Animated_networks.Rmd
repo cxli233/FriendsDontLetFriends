@@ -346,12 +346,22 @@ Each frame is a layout
 ```{r}
 ggplot() +
   geom_segment(
-    data = edge_data_frame,
+    data = edge_data_frame %>% 
+      mutate(layout = factor(layout, levels = c(
+        "circle", "star", "tree", 
+        "sugiyama", "mds", "fr",
+        "kk", "gem", "stress"
+      ))),
     aes(x = x, xend = xend, y = y, yend = yend, group = edge_id),
     color = "grey70", linewidth = 1, 
   ) +
   geom_point(
-    data = node_xy, aes(x, y, fill = module),
+    data = node_xy %>% 
+      mutate(layout = factor(layout, levels = c(
+        "circle", "star", "tree", 
+        "sugiyama", "mds", "fr",
+        "kk", "gem", "stress"
+      ))), aes(x, y, fill = module),
     shape = 21, size = 4, color = "white", alpha = 0.8
   ) +
   labs(title = "layout: {closest_state}",
@@ -363,7 +373,8 @@ ggplot() +
   theme(
     plot.title = element_text(size = 20),
     legend.position = "none"
-  )
+  ) +
+  view_follow()
 
 anim_save("../Results/network_layouts.gif")
 ```

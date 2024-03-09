@@ -1,0 +1,424 @@
+---
+title: "Animate networks"
+author: "Chenxin Li"
+date: "2023-01-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+Let's make animated network graphs! 
+
+# Packages 
+```{r, echo=FALSE, results='hide'} 
+library(tidyverse)
+library(igraph)
+library(ggraph)
+
+library(gganimate)
+library(readxl)
+library(RColorBrewer)
+```
+
+To do network stuff, we need `igraph` and `ggraph`. 
+`igraph` is a network analysis package that can do a lot of heavy-lifting when it comes of dealing with networks. 
+`ggraph` is a `ggplot` extension for network visualization.  
+
+To animate ggplot objects, we need gganime. 
+
+# Load an example network 
+## Make a network object from edges and nodes 
+We will use an example. Here is a hypothetical network that I made up. 
+```{r}
+my_network_edges <- read_excel("../Data/Example_network_edges.xlsx")
+
+my_network_edges
+```
+Without a given node table, 
+you can actually produce a node table from the edge table. 
+The node table is just a non-redundant list of all members of `from` and `to` in the edge table. 
+
+```{r}
+my_network_nodes <- data.frame(
+  nodes = unique(c(my_network_edges$From, my_network_edges$To))
+) %>% 
+  #mutate(nodes = as.character(nodes)) %>% 
+  mutate(module = case_when(
+   nodes %in% c(1:10) ~ "Module 1",
+   nodes %in% c(11:20) ~ "Module 2",
+   nodes %in% c(21:30) ~ "Module 3",
+  ))
+
+my_network_nodes
+```
+
+`unique(c(example_network_edges$From, example_network_edges$To)` takes the members of `from` and `to` from `example_network_edges` and take the non-redundant set. 
+
+To make a network, use the `graph_from_data_frame()` function from the `igraph` package. 
+```{r}
+my_network <- graph_from_data_frame(
+  d = my_network_edges,
+  vertices = my_network_nodes,
+  directed = F
+)
+
+my_network
+```
+
+The `d` in `graph_from_data_frame()` specifies the edge table.
+`vertices` species the node table. 
+In this example I set `directed` to `FALSE`.
+This means from node 1 to node 2 is the same from node 2 to node 1. 
+
+## Using ggraph 
+To make a network diagram, we will use `ggraph`.
+```{r}
+kk_vis <- ggraph(my_network, 
+       layout = "kk"
+       ) +
+  geom_edge_link(color = "grey70") +
+  geom_node_point(size = 3, shape = 21, color = "white", aes(fill = module)) +
+  geom_node_text(repel = T, aes(label = my_network_nodes$nodes)) +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  theme_void()
+```
+There are 3 fundamental elements to a network diagram. 
+
+1. Layout, which controls how nodes are placed in the 2-D plane. In this diagram I used "kk" or "Kamada-Kawai" layout algorithm. More about layout algorithms is discussed below. 
+2. Edges. In this example, I used `geom_edge_diagonal()`, which draws curves between nodes.
+3. Nodes, which is provided by `geom_node_point()`, draws each node as a point. 
+
+# Try different network layouts
+There are multiple layout algorithms for network diagrams. 
+Layouts can drastically change the appearance of networks, making them easier or harder to interpret. 
+
+
+My go-to is "kk", which generally gives good results.
+But I encourage you to read more about different layouts [here](https://www.data-imaginist.com/2017/ggraph-introduction-layouts/) and [here](https://r-graph-gallery.com/247-network-chart-layouts.html). 
+
+## Pull out x & y coordinates
+```{r}
+circle_xy <- ggraph(my_network, layout = "circle")$data %>% 
+  mutate(layout = "circle")
+
+star_xy <- ggraph(my_network, layout = "star")$data %>% 
+  mutate(layout = "star")
+
+kk_xy <- ggraph(my_network, layout = "kk")$data %>% 
+  mutate(layout = "kk")
+
+mds_xy <- ggraph(my_network, layout = "mds")$data %>% 
+  mutate(layout = "mds")
+
+fr_xy <- ggraph(my_network, layout = "fr")$data %>% 
+  mutate(layout = "fr")
+
+gem_xy <- ggraph(my_network, layout = "gem")$data %>% 
+  mutate(layout = "gem")
+
+stress_xy <- ggraph(my_network, layout = "stress")$data %>% 
+  mutate(layout = "stress")
+
+tree_xy <- ggraph(my_network, layout = "tree")$data %>% 
+  mutate(layout = "tree")
+
+sugiyama_xy <- ggraph(my_network, layout = "sugiyama")$data %>% 
+  mutate(layout = "sugiyama")
+
+node_xy <- rbind(
+  circle_xy,
+  star_xy,
+  kk_xy,
+  mds_xy,
+  fr_xy,
+  stress_xy,
+  gem_xy,
+  tree_xy,
+  sugiyama_xy
+) %>% 
+   mutate(module = case_when(
+   name %in% c(1:10) ~ "Module 1",
+   name %in% c(11:20) ~ "Module 2",
+   name %in% c(21:30) ~ "Module 3",
+  )) %>% 
+  select(x, y, name, layout, module)
+
+head(node_xy)
+```
+
+
+## Generate the edge data frame
+
+```{r}
+circle_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>% 
+  inner_join(circle_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(circle_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+star_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>% 
+  inner_join(star_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(star_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+kk_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>%
+  inner_join(kk_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(kk_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+mds_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>%
+  inner_join(mds_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(mds_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+fr_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>%
+  inner_join(fr_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(fr_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+stress_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>% 
+  inner_join(stress_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(stress_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+gem_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>% 
+  inner_join(gem_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(gem_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+tree_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>%
+  inner_join(tree_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(tree_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+sugiyama_edges <- my_network_edges %>% 
+  mutate(edge_id = paste0(From, "-", To)) %>% 
+  mutate(From = as.character(From)) %>% 
+  mutate(To = as.character(To)) %>% 
+  inner_join(sugiyama_xy %>% 
+               select(x, y, name, layout), by = c("From" = "name")) %>% 
+  rename(
+    temx = x, 
+    temy = y,
+  ) %>% 
+  inner_join(sugiyama_xy %>% 
+               select(x, y, name, layout), by = c("To" = "name", "layout")) %>% 
+  rename(
+    x = temx,
+    y = temy,
+    xend = x,
+    yend = y
+  )
+
+edge_data_frame <- rbind(
+  circle_edges,
+  star_edges,
+  kk_edges,
+  mds_edges,
+  fr_edges,
+  stress_edges,
+  gem_edges,
+  tree_edges,
+  sugiyama_edges
+) 
+
+head(edge_data_frame)
+```
+
+ 
+
+# Make the animation 
+Each frame is a layout 
+```{r}
+ggplot() +
+  geom_segment(
+    data = edge_data_frame %>% 
+      mutate(layout = factor(layout, levels = c(
+        "circle", "star", "tree", 
+        "sugiyama", "mds", "fr",
+        "kk", "gem", "stress"
+      ))),
+    aes(x = x, xend = xend, y = y, yend = yend, group = edge_id),
+    color = "grey70", linewidth = 1, 
+  ) +
+  geom_point(
+    data = node_xy %>% 
+      mutate(layout = factor(layout, levels = c(
+        "circle", "star", "tree", 
+        "sugiyama", "mds", "fr",
+        "kk", "gem", "stress"
+      ))), aes(x, y, fill = module),
+    shape = 21, size = 4, color = "white", alpha = 0.8
+  ) +
+  labs(title = "layout: {closest_state}",
+       fill = NULL) +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  ease_aes("linear") +
+  transition_states(layout, state_length = 2, transition_length = 1) + 
+  theme_void() +
+  theme(
+    plot.title = element_text(size = 20),
+    legend.position = "none"
+  ) +
+  view_follow()
+
+anim_save("../Results/network_layouts.gif")
+```
+
+```{r}
+ggplot() +
+  facet_wrap(~layout, scales = "free") +
+  geom_segment(
+    data = edge_data_frame %>% 
+      mutate(layout = factor(layout, levels = c(
+        "circle", "star", "tree", 
+        "sugiyama", "mds", "fr",
+        "kk", "gem", "stress"
+      ))),
+    aes(x = x, xend = xend, y = y, yend = yend, group = edge_id),
+    color = "grey70", 
+  ) +
+  geom_point(
+    data = node_xy %>% 
+      mutate(layout = factor(layout, levels = c(
+        "circle", "star", "tree", 
+        "sugiyama", "mds", "fr",
+        "kk", "gem", "stress"
+      ))), aes(x, y, fill = module),
+    shape = 21, size = 3, color = "white", alpha = 0.8
+  ) +
+  labs(title = "Different layouts of the SAME network\n",
+       fill = NULL,
+       x = NULL,
+       y = NULL) +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 12),
+    legend.position = "none",
+    panel.spacing = unit(1, "lines"),
+    panel.background = element_rect(fill = NA, color = NA),
+    strip.background = element_rect(fill = NA, color = NA),
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    strip.text = element_text(size = 12)
+  )
+
+ggsave("../Results/Different_layouts.svg", height = 6, width = 6, bg = "white")
+ggsave("../Results/Different_layouts.png", height = 6, width = 6, bg = "white")
+```
+

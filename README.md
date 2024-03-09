@@ -152,6 +152,14 @@ Layouts can drastically change the appearance of networks, making them easier or
 Here are 3 network graphs from the same data. They look very different from each other.
 Data from: [Li et al., 2022, BioRxiv](https://www.biorxiv.org/content/10.1101/2022.07.04.498697v1) 
 
+Here is 9 different layouts for the _same_ network. They can look very different. 
+
+![Different layouts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/network_layouts.gif)
+
+The R script to make this animation is available [here](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Animated_networks.Rmd)
+
+![Different layout of the animation](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Different_layouts.png)
+
 # 9. Friends Don't Let Friends Confuse Position-based Visualizations with Length-based Visualizations 
 
 This is always the elephant in the room and the essence of many misleading visualizations. 
@@ -251,8 +259,9 @@ One displays proportional data adding up to 100%, the other displays the differe
 These are very distinct tasks in data visualization. 
 
 In this hypothetical experiment, we had blueberry plants assigned to two groups.
-One group was the control; the other was treated with a chemical to make fruit development faster. 
-Each group had 5 plants. The response of the treatment was divided into 3 categories: 
+One group was the control; the other was treated with a chemical to make fruit development faster.  
+Each group had 5 plants.
+The response of the treatment was divided into 3 categories: 
 light green fruits, light blue fruits, and dark blue fruits. 
 100 fruits from each plant were examined and the number of fruits in each category was counted. 
 The percentage of fruits in each category was calculated and reported. 

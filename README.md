@@ -60,7 +60,7 @@ This is quite common in the literature as well, but unfortunately, violin plots 
 Distributions and quartiles can vary widely with small n, even if the underlying observations are similar. 
 Distribution and quartiles are only meaningful with large n. 
 I did an experiment before, where I sampled the *same* normal distribution several times and computed the quartiles for each sample.
-The quartiles only stablize when n gets larger than 50. 
+The quartiles only stabilize when n gets larger than 50. 
 
 # 3. Friends Don't Let Friends Use Bidirectional Color Scales for Unidirectional Data 
 

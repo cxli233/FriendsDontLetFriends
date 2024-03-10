@@ -344,7 +344,7 @@ head(edge_data_frame)
 # Make the animation 
 Each frame is a layout 
 ```{r}
-ggplot() +
+my_animate <- ggplot() +
   geom_segment(
     data = edge_data_frame %>% 
       mutate(layout = factor(layout, levels = c(
@@ -376,6 +376,7 @@ ggplot() +
   ) +
   view_follow()
 
+animate(my_animate, height = 4, width = 4, units = "in", res = 300)
 anim_save("../Results/network_layouts.gif")
 ```
 

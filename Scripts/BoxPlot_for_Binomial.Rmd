@@ -1,0 +1,97 @@
+---
+title: "BoxPlot_for_Binomial"
+author: "Chenxin Li"
+date: "2024-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Friends don't let friends use boxpot for binomial data
+
+# Packages
+```{r}
+library(tidyverse)
+library(RColorBrewer)
+library(ggbeeswarm)
+
+library(patchwork)
+```
+
+## Data 
+```{r}
+set.seed(666)
+```
+
+```{r}
+data1 <- data.frame(
+  response = rnorm(n = 100, mean = 5, sd = 2)
+) %>% 
+  mutate(group = "group1")
+
+data2 <- data.frame(
+  response = c(
+    rnorm(n = 50, mean = 2.5, sd = 1),
+    rnorm(n = 50, mean = 7.5, sd = 1)
+  )) %>% 
+    mutate(group = "group2")
+
+data3 <- data.frame(
+  response = c(
+    rnorm(n = 33, mean = 2, sd = 0.5),
+    rnorm(n = 33, mean = 5, sd = 0.5),
+    rnorm(n = 33, mean = 8, sd = 0.5)
+  )) %>% 
+    mutate(group = "group3")
+```
+
+## Bad example
+```{r}
+Box <- rbind(
+  data1, 
+  data2,
+  data3
+) %>% 
+  ggplot(aes(x = group, y = response)) +
+  geom_boxplot(aes(fill = group), alpha = 0.8, width = 0.7) +
+  scale_fill_manual(values = brewer.pal(8, "Set2")) +
+  labs(title = "Very similar!") + 
+  theme_classic()
+
+Box
+```
+## Good example
+```{r}
+Dots <- rbind(
+  data1, 
+  data2,
+  data3
+) %>% 
+  ggplot(aes(x = group, y = response)) +
+  geom_quasirandom(aes(color = group), alpha = 0.8) +
+  scale_color_manual(values = brewer.pal(8, "Set2")) +
+  labs(title = "I guess not!") + 
+  theme_classic()
+
+Dots
+```
+# Wrap them together
+```{r}
+wrap_plots(
+  Box, Dots,
+  nrow = 1
+) &
+  theme(legend.position = "none")
+
+ggsave("../Results/BoxPlots_for_binomial.svg", width = 5, height = 2.5)
+ggsave("../Results/BoxPlots_for_binomial.png", width = 5, height = 2.5)
+```
+Before making a box plot, one should check the distribution of their data,
+since box plots focus on median and quartiles, 
+they cannot handle binomial data (and by extension data with multiple modes).
+Ploting all the data points using `geom_quasirandom()` from the [ggbeeswarm package](https://github.com/eclarke/ggbeeswarm) is the best practice for small sample to moderate (less than tens of thousands) sample sizes, 
+as dots are robust to small sample sizes, 
+whereas distribution-based graphics such as violin plots and histograms are not.
+See [this section](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes) and [this section](https://github.com/cxli233/FriendsDontLetFriends/tree/main?tab=readme-ov-file#friends-dont-let-friends-use-histogram-for-small-sample-sizes) for details. 

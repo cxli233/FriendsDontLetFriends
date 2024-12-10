@@ -1,0 +1,124 @@
+---
+title: "Histogram_for_small_n"
+author: "Chenxin Li"
+date: "2024-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Friends don't let friends use histogram for small sample sizes 
+
+# Packages
+```{r}
+library(tidyverse)
+library(RColorBrewer)
+library(ggbeeswarm)
+library(viridis)
+library(patchwork)
+```
+
+# Data
+```{r}
+set.seed(666)
+```
+
+```{r}
+n10 <- data.frame(
+  response = rnorm(n = 10)
+) %>% 
+  mutate(group = "n = 10")
+
+n100 <- data.frame(
+  response = rnorm(n = 100)
+) %>% 
+  mutate(group = "n = 100")
+
+n1000 <- data.frame(
+  response = rnorm(n = 1000)
+) %>% 
+  mutate(group = "n = 1000")
+```
+
+# Graphs
+```{r}
+bins10 <- rbind(
+  n10, n100, n1000
+) %>% 
+  ggplot(aes(x = response)) +
+  facet_wrap(~group, scales = "free", ncol = 1) +
+  geom_histogram(bins = 10, width = 0.7, color = "white", alpha = 0.8, 
+                 fill = viridis(n = 8, begin = 0.1, end = 0.8)[1]) +
+  labs(title = "10 bins") +
+  theme_classic() + 
+  theme(panel.spacing = unit(1, "lines"),
+        strip.placement = "outside",
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0)) 
+
+bins10
+```
+
+```{r}
+bins30 <- rbind(
+  n10, n100, n1000
+) %>% 
+  ggplot(aes(x = response)) +
+  facet_wrap(~group, scales = "free", ncol = 1) +
+  geom_histogram(bins = 30, width = 0.7, color = "white",
+                 fill = viridis(n = 8, begin = 0.1, end = 0.8)[4]) +
+  labs(title = "30 bins") +
+  theme_classic() + 
+  theme(panel.spacing = unit(1, "lines"),
+        strip.placement = "outside",
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0)) 
+
+bins30
+```
+
+```{r}
+bins50 <- rbind(
+  n10, n100, n1000
+) %>% 
+  ggplot(aes(x = response)) +
+  facet_wrap(~group, scales = "free", ncol = 1) +
+  geom_histogram(bins = 50, width = 0.7, color = "white",
+                 fill = viridis(n = 8, begin = 0.1, end = 0.8)[7]) +
+  labs(title = "50 bins") +
+  theme_classic() + 
+  theme(panel.spacing = unit(1, "lines"),
+        strip.placement = "outside",
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0))
+
+bins50
+```
+
+# wrap them
+```{r}
+wrap_plots(
+  bins10, bins30, bins50 +
+    labs(caption = "\nWow, the appearance does change with different bin numbers."),
+  ncol = 3
+) &
+  theme(plot.caption = element_text(size = 10))
+
+ggsave("../Results/Histogram_for_small_n.svg", height = 6, width = 8)
+ggsave("../Results/Histogram_for_small_n.png", height = 6, width = 8)
+```
+I've seen histogram being proposed as the replacement for bar plots. 
+However, a serious caveat for histogram is that histograms are not robust to bin numbers for small (and even moderate) sample sizes. 
+What is a histogram anyway? In a histogram, we first bin the data into a defined number of bins.
+Then we count how many observations are there for each bin and graph them. 
+
+In this example, I sampled _the same_ normal distribution 3 times with different sample sizes (n = 10, 100, and 1000).
+Even though they came from _the same_ normal distribution, the histograms look quite different based on the number of bins. 
+To showcase this, I plotted histogram for 10, 30, and 50 bins. 
+
+First of all, histogram makes no sense for small sample sizes. With small sample sizes (n < 30), the better practice is to graph all data points. 
+Second of all, you can see that the shape of the histogram is only robust to changing bin number when the sample size is fairly large (like 1000).
+Even if n = 100, the appearance of the histogram can change drastically as the number of bins changes. 
+

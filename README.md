@@ -35,8 +35,8 @@ It requires R, RStudio, and the rmarkdown package.
 12. [Friends Don't Let Friends Use Red/green and Rainbow for Color Scales](https://github.com/cxli233/FriendsDontLetFriends#12-friends-dont-let-friends-use-redgreen-and-rainbow-color-scales)
 13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot](https://github.com/cxli233/FriendsDontLetFriends/tree/main#13-friends-dont-let-friends-forget-to-reorder-stacked-bar-plot)
 14. [Friends Don't Let Friends Mix Stacked Bars and Mean separation](https://github.com/cxli233/FriendsDontLetFriends/tree/main#14-friends-dont-let-friends-mix-stacked-bars-and-mean-separation)
-15. [Friends Don't Let Friends Use Histogram for Small Sample Sizes]()
-16. [Friends don't Let Friends Use Boxpot for Binomial Data]()
+15. [Friends Don't Let Friends Use Histogram for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/tree/main?tab=readme-ov-file#friends-dont-let-friends-use-histogram-for-small-sample-sizes)
+16. [Friends don't Let Friends Use Boxpot for Binomial Data](https://github.com/cxli233/FriendsDontLetFriends/tree/main?tab=readme-ov-file#friends-dont-let-friends-use-histogram-for-small-sample-sizes)
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -311,7 +311,7 @@ This figure should speak for itself. Is your boxplot hiding something from you?
 ![Is your box plot hiding something from you](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/BoxPlots_for_binomial.png)
 
 Before making a boxplot, one should check the distribution of their data, since box plots focus on median and quartiles, they cannot handle binomial data (and by extension data with multiple modes).
-Ploting all the data points using `geom_quasirandom()` from the [ggbeeswarm package](https://github.com/eclarke/ggbeeswarm) is the best practice for small sample to moderate (less than tens of thousands) sample sizes, as distribution-based graphics such as violin plots and histograms are not robust to small sample sizes. See [this section](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes) and [this section]() for details. 
+Ploting all the data points using `geom_quasirandom()` from the [ggbeeswarm package](https://github.com/eclarke/ggbeeswarm) is the best practice for small sample to moderate (less than tens of thousands) sample sizes, as distribution-based graphics such as violin plots and histograms are not robust to small sample sizes. See [this section](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes) and [this section](https://github.com/cxli233/FriendsDontLetFriends/tree/main?tab=readme-ov-file#friends-dont-let-friends-use-histogram-for-small-sample-sizes) for details. 
 
 # Conclusion (?)
 

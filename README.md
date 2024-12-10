@@ -35,6 +35,8 @@ It requires R, RStudio, and the rmarkdown package.
 12. [Friends Don't Let Friends Use Red/green and Rainbow for Color Scales](https://github.com/cxli233/FriendsDontLetFriends#12-friends-dont-let-friends-use-redgreen-and-rainbow-color-scales)
 13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot](https://github.com/cxli233/FriendsDontLetFriends/tree/main#13-friends-dont-let-friends-forget-to-reorder-stacked-bar-plot)
 14. [Friends Don't Let Friends Mix Stacked Bars and Mean separation](https://github.com/cxli233/FriendsDontLetFriends/tree/main#14-friends-dont-let-friends-mix-stacked-bars-and-mean-separation)
+15. [Friends Don't Let Friends Use Histogram for Small Sample Sizes]()
+16. [Friends don't Let Friends Use Boxpot for Binomial Data]()
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -286,6 +288,30 @@ There is no ambiguity on which comparisons are being made.
 As shown in the first stacked bar plot, 
 the chemical treatment strongly increases the proportion of dark blue fruits, 
 at the expense of lighter color fruits. 
+
+# Friends don't let friends use histogram for small sample sizes 
+I've seen histogram being proposed as the replacement for bar plots. 
+However, a serious caveat for histogram is that histograms are not robust to bin numbers for small (and even moderate) sample sizes. 
+In a histogram, we first bin the data into a defined number of bins.
+Then we count how many observations are there for each bin and graph them. 
+
+![Histogram with different sample sizes and bin numbers](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Histogram_for_small_n.png)
+
+In this example, I sampled _the same_ normal distribution 3 times with different sample sizes (n = 10, 100, and 1000).
+Even though they came from _the same_ normal distribution, the histograms look quite different based on the number of bins. 
+To showcase this, I plotted histograms for 10, 30, and 50 bins. 
+
+First of all, histogram makes no sense for small sample sizes. With small sample sizes (n < 30), the much better practice is to graph all data points. 
+Second of all, you can see that the shape of the histogram is only robust to changing bin number when the sample size is fairly large (like 1000).
+Even if n = 100, the appearance of the histogram can change drastically as the number of bins changes. 
+
+# Friends don't let friends use boxpot for binomial data
+This figure should speak for itself. Is your boxplot hiding something from you?  
+
+![Is your box plot hiding something from you](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/BoxPlots_for_binomial.png)
+
+Before making a boxplot, one should check the distribution of their data, since box plots focus on median and quartiles, they cannot handle binomial data (and by extension data with multiple modes).
+Ploting all the data points using `geom_quasirandom()` from the [ggbeeswarm package](https://github.com/eclarke/ggbeeswarm) is the best practice for small sample to moderate (less than tens of thousands) sample sizes, as distribution-based graphics such as violin plots and histograms are not robust to small sample sizes. See [this section](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes) and [this section]() for details. 
 
 # Conclusion (?)
 

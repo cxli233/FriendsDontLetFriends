@@ -36,7 +36,7 @@ It requires R, RStudio, and the rmarkdown package.
 13. [Friends Don't Let Friends Forget to Reorder Stacked Bar Plot](https://github.com/cxli233/FriendsDontLetFriends/tree/main#13-friends-dont-let-friends-forget-to-reorder-stacked-bar-plot)
 14. [Friends Don't Let Friends Mix Stacked Bars and Mean separation](https://github.com/cxli233/FriendsDontLetFriends/tree/main#14-friends-dont-let-friends-mix-stacked-bars-and-mean-separation)
 15. [Friends Don't Let Friends Use Histogram for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/tree/main?tab=readme-ov-file#friends-dont-let-friends-use-histogram-for-small-sample-sizes)
-16. [Friends don't Let Friends Use Boxpot for Bimodal Data](https://github.com/cxli233/FriendsDontLetFriends?tab=readme-ov-file#friends-dont-let-friends-use-boxpot-for-bimodal-data)
+16. [Friends don't Let Friends Use Boxplot for Bimodal Data](https://github.com/cxli233/FriendsDontLetFriends?tab=readme-ov-file#friends-dont-let-friends-use-boxplot-for-bimodal-data)
 
 # 1. Friends Don't Let Friends Make Bar Plots for Means Separation
 
@@ -305,7 +305,7 @@ First of all, histogram makes no sense for small sample sizes. With small sample
 Second of all, you can see that the shape of the histogram is only robust to changing bin number when the sample size is fairly large (like 1000).
 Even if n = 100, the appearance of the histogram can change drastically as the number of bins changes. 
 
-# Friends don't let friends use boxpot for bimodal data
+# Friends don't let friends use boxplot for bimodal data
 This figure should speak for itself. Is your boxplot hiding something from you?  
 
 ![Is your box plot hiding something from you](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/BoxPlots_for_binomial.png)

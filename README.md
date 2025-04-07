@@ -47,6 +47,8 @@ The task of the visualization is to show the means and the spread (dispersion) o
 
 ![No Bar Plots for Means Separation](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_bar_plot.png) 
 
+[View R code: Bar_plots_for_means_separation.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Bar_plots_for_means_separation.Rmd)
+
 In this example, two groups have similar means and standard deviations, but quite different distributions. **Are they really "the same"?**
 Just don't use bar plot for means separation, or at least check a couple things before settling down on a bar plot. 
 
@@ -59,6 +61,8 @@ This is quite common in the literature as well, but unfortunately, violin plots 
 
 ![Beware of Violin Plots for Small Sample Sizes](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Beware_of_small_n_box_violin_plot.png) 
 
+[View R code: Violin_plot_for_small_n.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Violin_plot_for_small_n.Rmd)
+
 Distributions and quartiles can vary widely with small n, even if the underlying observations are similar. 
 Distribution and quartiles are only meaningful with large n. 
 I did an experiment before, where I sampled the *same* normal distribution several times and computed the quartiles for each sample.
@@ -70,6 +74,8 @@ Excuse my language, but this is a truly data visualization sin, and again quite 
 I can understand why this error is common, because it appears that many of us have not spent a lot of thoughts on this issue. 
 
 ![Are You Using the Right Color Scale for Your Data?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/ColorScales.svg)
+
+[View R code: Divergent_gradient_for_unidirectional_data.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Divergent_gradient_for_unidirectional_data.Rmd)
 
 Color scales are pretty, but we have to be extra careful.
 When color scales (or color gradients) are used to represent numerical data, the darkest and lightest colors should have special meanings.
@@ -84,6 +90,8 @@ It has to do with presenting results of a multi-factorial experiment.
 Bar plot meadows are very common in scientific publications and unfortunately also *ineffective* in communicating the results. 
 
 ![Horrendous Giant Bar Plot vs. Better Designed Plot](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/AvoidBarPlotMeadow.png)
+
+[View R code: Bar_meadow_for_factorial.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Bar_meadow_for_factorial.Rmd)
 
 Data from: [Matand et al., 2020, BMC Plant Biology](https://link.springer.com/article/10.1186/s12870-020-2243-7)
 
@@ -100,6 +108,8 @@ Heatmaps are very common in scientific publications, and *very very* common in o
 However, for heatmaps to be effective, we have to consider the ordering of rows & columns. 
 
 ![A Heatmap before and after reordering rows and columns](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_rows_and_columns_for_heatmap.png) 
+
+[View R code: Reorder_rows_col_heatmap.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Reorder_rows_col_heatmap.Rmd)
 
 In this example, I have cells as columns and features as rows. Grids are showing z scores. 
 It is impossible to get anything useful out of the heatmap without reordering rows and columns. 
@@ -128,6 +138,8 @@ Let me show you an example:
 
 ![Did you check outliers](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_outliers_for_heatmap.svg)
 
+[View R code: Check_outlier_for_heatmaps.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Check_outlier_for_heatmaps.Rmd)
+
 In this example, I have 2 observations. For each observations, I measured 20 features. 
 Without checking for outliers, it may appear that the 2 observations are overall similar, except at 2 features. 
 However, after maxing out the color scale around 95th percentile of the data, it reveals that the two observations are distinct across all features. 
@@ -139,6 +151,8 @@ In a multifactor experiment, sometimes the range of the response variable change
 
 ![Did you check data range at each factor level](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Check_range_at_factor_level.svg)
 
+[View R code: Check_range_at_factor_levels.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Check_range_at_factor_levels.Rmd)
+
 This hypothetical experiment measured 3 compounds across 2 groups (control vs. treatment). 
 Without checking data range for each compound, you will likely have missed that the treatment had a strong effect on compound 1.
 This is because the concentration of compound 1 has a much narrower range than the other compounds in this experiment. 
@@ -149,6 +163,8 @@ Network graphs are common in scientific publications. They are super useful in p
 However, the appearance (not the topology) of the network can make a huge difference in determining if a network graph is effective. 
 
 ![Try different network layouts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/TryDifferentLayouts.svg) 
+
+[View R code: NetworkLayouts.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/NetworkLayouts.Rmd)
 
 Layouts can drastically change the appearance of networks, making them easier or harder to interpret.
 Here are 3 network graphs from the same data. They look very different from each other.
@@ -170,6 +186,8 @@ Two of the following graphs are fine, but one of them is a data visualization cr
 
 ![Position vs. length based visualizations](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Position_and_length_based_visualizations.svg)
 
+[View R code: Position_vs_length_based_visualizations.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Position_vs_length_based_visualizations.Rmd)
+
 In dot and line plots, values are represented by positions along the x and y axis.
 The same idea applies to other position based visualizations, such as box plots. 
 In bar plots, values are represented by the distance from the x axis, and thus the length of the bar. 
@@ -187,6 +205,8 @@ However, we must be very careful with bar plots that have broken axis. Here is a
 
 ![Broken axis](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Broken_axis.svg) 
 
+[View R code: Broken_axis.R](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Broken_axis.R)
+
 In this example, two graphs (left vs. right) are showing the same data. 
 However, by changing where the axis is broken, one can make certain bars looks longer or shorter. 
 In this example, the length of bar "d" can look *really* different.
@@ -202,6 +222,8 @@ Pie charts have been criticized, because human are much worse in reading angles 
 Here is a [blog post](https://www.data-to-viz.com/caveat/pie.html) that explores that. 
 
 ![Don't make pie charts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_pie_chart.svg)
+
+[View R code: NoPieCharts.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/NoPieCharts.Rmd)
 
 In this example, we have two groups, each contains 4 sub-categories. 
 In classic pie charts, the angles (and thus arc lengths & sector area) represent the data. 
@@ -219,6 +241,8 @@ In this example, we have 3 groups, each of which contains two sub-categories (Ty
 
 ![Don't make concentric donuts](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/dont_concentric_donuts.svg)
 
+[View R code: NoConcentricDonuts.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/NoConcentricDonuts.Rmd)
+
 In concentric donuts, you might be tempted to say the data are represented by the arc lengths, which is in fact **inaccurate**. 
 The arc lengths on the outer rings are much longer than those in the inner rings. 
 Group 2 and Group 3 have the same exact values, but the arc lengths of Group 3 are much longer. 
@@ -232,6 +256,8 @@ BTW, this is also my main issue with [circos plots](http://circos.ca/) and other
 # 12. Friends Don't Let Friends Use Red/Green and Rainbow color scales
 
 ![are you making a "safe" heatmap?](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Color_blind_grey_scale_safe_heatmap.svg)
+
+[View R code: Red_green.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Red_green.Rmd)
 
 Deuteranomaly is the most common type of red/green colorblindness, occurring in 1/16 male and 1/256 female. 
 Any color scales that use shades of red and shades of green in the same time would be a problem for a person with red/green colorblindness (third column of the figure). 
@@ -248,6 +274,8 @@ However, when we have many samples and many classes, stacked bar plots need to b
 And by "optimize" I mean the grouping and ordering of samples. 
 
 ![Reorder your stacked bars](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Reorder_stacked_bars.png)
+
+[View R code: stacked_bars_optimization.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/stacked_bars_optimization.Rmd)
 
 Here we have an example data with 100 samples and 8 classes of member. 
 Due to the number of samples and classes, it is very hard to discern anything from this graph without optimizing the order of bars. What the heck am I looking at? 
@@ -270,6 +298,8 @@ The percentage of fruits in each category was calculated and reported.
 The question of the study is: did the chemical treatment work? 
 
 ![Don't mix stacked bar plots with mean separation plots](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/stacked_bar_vs_jitter.png) 
+
+[View R code: Mixing_stacked_bar_and_mean_separation.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Mixing_stacked_bar_and_mean_separation.Rmd)
 
 The first stacked bar plot is fine as the standard way to visualize proportion data. 
 It is clear that all categories add up to 100%, 
@@ -297,6 +327,8 @@ Then we count how many observations are there for each bin and graph them.
 
 ![Histogram with different sample sizes and bin numbers](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/Histogram_for_small_n.png)
 
+[View R code: Histogram_for_small_n.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/Histogram_for_small_n.Rmd)
+
 In this example, I sampled _the same_ normal distribution 3 times with different sample sizes (n = 10, 100, and 1000).
 Even though they came from _the same_ normal distribution, the histograms look quite different based on the number of bins. 
 To showcase this, I plotted histograms for 10, 30, and 50 bins. 
@@ -306,9 +338,11 @@ Second of all, you can see that the shape of the histogram is only robust to cha
 Even if n = 100, the appearance of the histogram can change drastically as the number of bins changes. 
 
 # Friends don't let friends use boxpot for bimodal data
-This figure should speak for itself. Is your boxplot hiding something from you?  
+This figure should speak for itself. Is your box plot hiding something from you?  
 
 ![Is your box plot hiding something from you](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/BoxPlots_for_binomial.png)
+
+[View R code: BoxPlot_for_Binomial.Rmd](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Scripts/BoxPlot_for_Binomial.Rmd)
 
 Before making a boxplot, one should check the distribution of their data, since box plots focus on median and quartiles, they cannot handle bimodal data (and by extension data with multiple modes).
 Ploting all the data points using `geom_quasirandom()` from the [ggbeeswarm package](https://github.com/eclarke/ggbeeswarm) is the best practice for small sample to moderate (less than tens of thousands) sample sizes, as distribution-based graphics such as violin plots and histograms are not robust to small sample sizes. See [this section](https://github.com/cxli233/FriendsDontLetFriends#2-friends-dont-let-friends-make-violin-plots-for-small-sample-sizes) and [this section](https://github.com/cxli233/FriendsDontLetFriends/tree/main?tab=readme-ov-file#friends-dont-let-friends-use-histogram-for-small-sample-sizes) for details. 

@@ -289,7 +289,7 @@ As shown in the first stacked bar plot,
 the chemical treatment strongly increases the proportion of dark blue fruits, 
 at the expense of lighter color fruits. 
 
-# Friends don't let friends use histogram for small sample sizes 
+# 15. Friends don't let friends use histogram for small sample sizes 
 I've seen histogram being proposed as the replacement for bar plots. 
 However, a serious caveat for histogram is that histograms are not robust to bin numbers for small (and even moderate) sample sizes. 
 In a histogram, we first bin the data into a defined number of bins.
@@ -305,7 +305,7 @@ First of all, histogram makes no sense for small sample sizes. With small sample
 Second of all, you can see that the shape of the histogram is only robust to changing bin number when the sample size is fairly large (like 1000).
 Even if n = 100, the appearance of the histogram can change drastically as the number of bins changes. 
 
-# Friends don't let friends use boxpot for bimodal data
+# 16. Friends don't let friends use boxpot for bimodal data
 This figure should speak for itself. Is your boxplot hiding something from you?  
 
 ![Is your box plot hiding something from you](https://github.com/cxli233/FriendsDontLetFriends/blob/main/Results/BoxPlots_for_binomial.png)
